@@ -8,18 +8,23 @@
 
 /* custom colors */
 :root {
-  --color-primary: #3b82f6;
+  --color-primary: #3d46ed;
   --color-secondary: #f59e0b;
+  --font-sans: var(--font-brico);
 }
 
 .dark {
-  --color-primary: #2563eb;
+  --color-primary: #3d46ed;
   --color-secondary: #d97706;
 }
 
 /* Global reusable gradient */
 .bg-app-gradient {
   background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+}
+
+.bg-gradient {
+  background: linear-gradient(to bottom right, #3d46ed, #5740ea);
 }
 
 .text-primary { color: var(--color-primary); }

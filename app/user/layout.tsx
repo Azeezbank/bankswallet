@@ -33,9 +33,9 @@ export default function HomeLayout({ children }: Props) {
     const protectPage = async () => {
       try {
         const response = await api.get("/protectedPage/user");
-        if (response.status !== 200) router.push("/auth/login");
+        // if (response.status !== 200) router.push("/auth/login");
       } catch {
-        router.push("/auth/login");
+        // router.push("/auth/login");
       }
     };
     protectPage();
