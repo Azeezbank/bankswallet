@@ -6,6 +6,7 @@ export async function proxy(req: NextRequest) {
   const publicRoutes = [
     "/api/auth/login",
     "/api/auth/register",
+    "/api/data/plan",
   ];
 
   if (publicRoutes.includes(req.nextUrl.pathname)) {

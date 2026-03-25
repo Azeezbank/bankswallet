@@ -33,7 +33,7 @@ export default function LandingPage() {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const res = await axios.get(`/api/home/data/plan`, {
+        const res = await axios.get(`/api/data/plan`, {
         });
         if (res.status === 200) {
           setPlans(res.data.mtn);

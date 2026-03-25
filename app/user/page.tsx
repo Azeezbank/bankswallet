@@ -22,7 +22,7 @@ interface Bank {
   bankName: string;
 }
 
-interface WalletInfo {
+interface UserInfo {
   username: string;
   user_balance: string;
   packages: string;
@@ -43,7 +43,7 @@ const DashboardPage = () => {
     acctName: "",
     bankName: "",
   });
-  const [walletBalance, setWalletBalance] = useState<WalletInfo>({
+  const [userInfo, setUserInfo] = useState<UserInfo>({
     username: "",
     user_balance: "",
     role: "",
@@ -64,7 +64,7 @@ const DashboardPage = () => {
   const [isErr, setIsErr] = useState(false);
   const [isAmountVisible, setIsAmountVisible] = useState(false);
 
-  const user = walletBalance.username ?? "";
+  const user = userInfo.username ?? "";
   const link = `${window.location.origin}/register?ref=${user}`;
 
   // Copy referral link
@@ -105,11 +105,11 @@ const DashboardPage = () => {
   useEffect(() => {
     const handleUserInfo = async () => {
       try {
-        const response = await api.get<WalletInfo>(
+        const response = await api.get<UserInfo>(
           `/user/info`,
         );
         if (response.status === 200) {
-          setWalletBalance(response.data);
+          setUserInfo(response.data);
         }
       } catch (err: any) {
         console.error(err.response?.data.message || err.message);
@@ -157,17 +157,17 @@ const DashboardPage = () => {
 
   // Check role
   useEffect(() => {
-    if (walletBalance.role === "admin") {
+    if (userInfo.role === "admin") {
       setRole(false);
     } else {
       setRole(true);
     }
-  }, [walletBalance]);
+  }, [userInfo]);
 
   // Add wallet status indicator
   useEffect(() => {
     const handleblink = () => {
-      const balance = Number(walletBalance.user_balance);
+      const balance = Number(userInfo.user_balance);
       if (balance >= 1000) {
         setBalanceColor("enoughbalance");
       } else if (balance < 1000 && balance > 500) {
@@ -177,7 +177,7 @@ const DashboardPage = () => {
       }
     };
     handleblink();
-  }, [walletBalance]);
+  }, [userInfo]);
 
 
   return (
@@ -244,7 +244,7 @@ const DashboardPage = () => {
         {/* Greeting */}
         <div className="text-center mb-6">
           <p className="text-xl md:text-2xl font-semibold">
-            You Are Welcome, <span className="text-primary">{walletBalance.username}</span>
+            You Are Welcome, <span className="text-primary">{userInfo.username}</span>
           </p>
           <hr className="my-3 border-gray-300" />
           <div className="mb-2">
@@ -252,7 +252,7 @@ const DashboardPage = () => {
               <Image src="/google-play.png" width={150} height={50} alt="Download our app" />
             </a>
           </div>
-          <p className="font-bold">Package: {walletBalance.packages}</p>
+          <p className="font-bold">Package: {userInfo.packages}</p>
           <hr className="my-3 border-gray-300" />
         </div>
 
@@ -414,7 +414,7 @@ const DashboardPage = () => {
               <div className="ml-4">
                 <p className="text-gray-500">Wallet Balance</p>
                 <div className={`w-20 h-2 mt-1 rounded ${balanceColor}`}></div>
-                <p className="font-bold mt-1"># {walletBalance.user_balance}</p>
+                <p className="font-bold mt-1"># {userInfo.user_balance}</p>
               </div>
             </div>
 
@@ -425,7 +425,7 @@ const DashboardPage = () => {
               </div>
               <div className="ml-4">
                 <p className="text-gray-500">Cashback</p>
-                <p className="font-bold mt-1"># {walletBalance.cashback}</p>
+                <p className="font-bold mt-1"># {userInfo.cashback}</p>
               </div>
             </div>
 
@@ -436,7 +436,7 @@ const DashboardPage = () => {
               </div>
               <div className="ml-4">
                 <p className="text-gray-500">My Total Referral</p>
-                <p className="font-bold mt-1">{walletBalance.referree}</p>
+                <p className="font-bold mt-1">{userInfo.referree}</p>
               </div>
             </div>
           </div>
@@ -552,7 +552,7 @@ const DashboardPage = () => {
               </h2>
               <h5 className="text-gray-500 text-center">
                 WALLET BALANCE <br />
-                <span className="text-secondary font-bold"># {walletBalance.user_balance}</span>
+                <span className="text-secondary font-bold"># {userInfo.user_balance}</span>
               </h5>
             </div>
 
@@ -589,7 +589,7 @@ const DashboardPage = () => {
 
       {/* New design */}
       <div className="bg-white">
-        <Header username={walletBalance.username} />
+        <Header username={userInfo.username} />
         <div className="flex flex-col items-center bg-gradient px-4 sm:px-6 py-12 text-white">
 
           {/* Balance label */}
@@ -602,7 +602,7 @@ const DashboardPage = () => {
             <div className="flex gap-1 items-center">
               {isAmountVisible ? (
                 <h2 className="text-xl sm:text-2xl font-semibold">
-                  ₦{walletBalance.user_balance}
+                  ₦{userInfo.user_balance}
                 </h2>
               ) : (
                 <>
@@ -638,7 +638,7 @@ const DashboardPage = () => {
 
             <div className="flex items-center gap-2 bg-white text-secondary rounded px-3 py-1 text-xs sm:text-sm">
               <PackageCheck className="w-4 h-4 sm:w-5 sm:h-5" />
-              <p>{walletBalance.packages}</p>
+              <p>{userInfo.packages}</p>
             </div>
           </div>
 

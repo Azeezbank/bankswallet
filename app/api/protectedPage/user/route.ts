@@ -5,7 +5,6 @@ export async function GET(req: NextResponse) {
   try {
     // Example: assuming userId comes from header or token
     const userId = Number(req.headers.get("x-user-id"));
-    console.log(userId, "id me")
 
     const user = await prisma.users.findFirst({
       where: { d_id: userId },

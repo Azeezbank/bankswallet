@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
         packages: true,
         cashback: true,
         referree: true,
+        Phone_number: true,
       },
     });
 

@@ -6,12 +6,12 @@ dotenv.config();
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { choosenNetwork } = body;
+  const { network } = body;
 
   try {
     const result = await prisma.data_types.findMany({
       where: {
-        network_name: choosenNetwork,
+        network_name: network,
         is_active: "active",
       },
     });
