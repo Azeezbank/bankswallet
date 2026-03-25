@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/Prisma.client";
 
-export async function GET(req: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     // Example: assuming userId comes from header or token
     const userId = Number(req.headers.get("x-user-id"));
