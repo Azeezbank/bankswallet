@@ -35,7 +35,7 @@ const DashboardPage = () => {
   const [link, setLink] = useState("");
 
   const user = userInfo.username ?? "";
-  
+
   useEffect(() => {
   if (typeof window !== "undefined") {
     setLink(`${window.location.origin}/register?ref=${user}`);
@@ -51,42 +51,6 @@ const DashboardPage = () => {
       .catch(() => setCopySuccess("Failed to copy link"));
     alert(copysuccess);
   };
-
-  // Fetch user information
-  // useEffect(() => {
-  //   const handleUserInfo = async () => {
-  //     try {
-  //       const response = await api.get<UserInfo>(
-  //         `/user/info`,
-  //       );
-  //       if (response.status === 200) {
-  //         setUserInfo(response.data);
-  //       }
-  //     } catch (err: any) {
-  //       console.error(err.response?.data.message || err.message);
-  //     }
-  //   };
-  //   handleUserInfo();
-  // }, []);
-
-  // Fetch account details
-  // useEffect(() => {
-  //   const bankDetail = async () => {
-  //     try {
-  //       const response = await api.post<Bank>(
-  //         `/user/bankacct`,
-  //         {},
-  //       );
-  //       if (response.status === 200) {
-  //         setBankDetails(response.data);
-  //         setIsAcctN(true);
-  //       }
-  //     } catch (err: any) {
-  //       console.error(err.response?.data.message || err.message);
-  //     }
-  //   };
-  //   bankDetail();
-  // }, []);
 
   // Fetch dashboard message
   useEffect(() => {
@@ -114,21 +78,6 @@ const DashboardPage = () => {
       setRole(true);
     }
   }, [userInfo]);
-
-  // Add wallet status indicator
-  // useEffect(() => {
-  //   const handleblink = () => {
-  //     const balance = Number(userInfo.user_balance);
-  //     if (balance >= 1000) {
-  //       setBalanceColor("enoughbalance");
-  //     } else if (balance < 1000 && balance > 500) {
-  //       setBalanceColor("lowbalance");
-  //     } else if (balance < 500) {
-  //       setBalanceColor("insulficientbalance");
-  //     }
-  //   };
-  //   handleblink();
-  // }, [userInfo]);
 
 
   return (

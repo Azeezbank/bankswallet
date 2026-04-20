@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import api from "@/app/lib/api";
+import { ModalNotification } from "@/app/components/modal/modal";
+import DotLoader from "@/app/components/modal/loader";
 
 interface UserInfo {
   d_id: number;
@@ -31,8 +33,10 @@ export default function UserInfoPage() {
     fullName: "",
   });
 
-  const [isUpdatingWallet, setIsUpdatingWallet] = useState(false);
-  const [isBanning, setIsBanning] = useState(false);
+  const [isNotification, setIsNotification] = useState(false);
+  const [title, setTitle] = useState('');
+  const [notification, setNotification] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
 
   /* Fetch user */
   const fetchUser = async () => {
@@ -57,68 +61,94 @@ export default function UserInfoPage() {
 
   /* Update user */
   const handleUpdateUser = async (field: string, value: any) => {
-
+setIsUpdating(true);
     try {
 
-      await api.put(
+      const res = await api.put(
         `/user/update/${id}`,
         { fieldName: field, value },
       );
 
+      setIsUpdating(false);
+      setIsNotification(true);
+      setNotification(res.data.message);
+      setTitle('Success!')
+
       fetchUser();
 
-    } catch {
-      console.error("Failed to update user");
+    } catch (err: any) {
+       setIsUpdating(false);
+      setIsNotification(true);
+      setNotification(err.response?.data?.message || "Something went wrong");
+      setTitle('Error!');
     }
   };
 
   /* Fund / Deduct wallet */
   const handleWalletUpdate = async () => {
 
-    setIsUpdatingWallet(true);
+    setIsUpdating(true);
 
     try {
 
-      await api.post(
+      const res = await api.post(
         `/user/fund/${id}`,
         { amount },
       );
+      setIsUpdating(false);
+      setIsNotification(true);
+      setNotification(res.data.message);
+      setTitle('Success!')
 
       fetchUser();
 
-    } catch {
-      console.error("Wallet update failed");
+    } catch (err: any) {
+      setIsUpdating(false);
+      setIsNotification(true);
+      setNotification(err.response?.data?.message || "Something went wrong");
+      setTitle('Error!');
     }
-
-    setIsUpdatingWallet(false);
   };
 
   /* Ban user */
   const handleBanUser = async () => {
 
-    setIsBanning(true);
+    setIsUpdating(true);
 
     try {
 
-      await api.put(
+      const res = await api.put(
         `/user/ban/${id}`,
         {},
       );
-
-      alert("User banned successfully");
+      setIsUpdating(false);
+      setIsUpdating(false);
+      setIsNotification(true);
+      setNotification(res.data.message);
+      setTitle('Success!')
 
       fetchUser();
 
-    } catch {
-      console.error("Ban failed");
+    } catch (err: any) {
+      setIsUpdating(false);
+      setIsUpdating(false);
+      setIsNotification(true);
+      setNotification(err.response?.data?.message || "Something went wrong");
+      setTitle('Error!');
     }
-
-    setIsBanning(false);
   };
 
   return (
 
     <div className="space-y-8">
+      {isUpdating && (
+        <DotLoader />
+      )}
+      {isNotification &&
+        <ModalNotification
+          notification={notification} title={title}
+          onButtonClick={() => setIsNotification(false)}
+          isNotification={isNotification} />}
 
       {/* Header */}
       <div className="flex justify-between items-center">
@@ -137,7 +167,7 @@ export default function UserInfoPage() {
           onClick={handleBanUser}
           className="bg-red-500 text-white px-4 py-2 rounded-lg"
         >
-          {isBanning ? "Please wait..." : "Ban User"}
+          Ban User
         </button>
 
       </div>
@@ -238,7 +268,7 @@ export default function UserInfoPage() {
               onClick={handleWalletUpdate}
               className="bg-primary text-white px-5 rounded-lg"
             >
-              {isUpdatingWallet ? "Updating..." : "Update"}
+              Update
             </button>
 
           </div>

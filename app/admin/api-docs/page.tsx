@@ -75,11 +75,6 @@ export default function ApiDocsPage() {
       }
 
     } catch (err: any) {
-
-      console.error(
-        "Failed to update API docs",
-        err.response?.data?.message || err.message
-      );
       setIsUpdating(false);
       setTitle('Error!');
       setNotification(err.response?.data?.message || "Something went wrong");
@@ -94,7 +89,10 @@ export default function ApiDocsPage() {
         <DotLoader />
       )}
       {isNotification && 
-      <ModalNotification notification={notification} title={title} onButtonClick={() => setIsNotification(false)} isNotification={isNotification} />}
+      <ModalNotification 
+      notification={notification} title={title} 
+      onButtonClick={() => setIsNotification(false)} 
+      isNotification={isNotification} />}
       
       {/* Page Title */}
       <div>

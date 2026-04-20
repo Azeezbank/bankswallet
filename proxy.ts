@@ -13,8 +13,6 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  console.log("AUTH HEADER:", req.headers.get("authorization"));
-
   const authHeader = req.headers.get("authorization");
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
