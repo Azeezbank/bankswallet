@@ -7,32 +7,14 @@ import { Typewriter } from "react-simple-typewriter";
 import HomeLayout from "./layout";
 import api from "@/app/lib/api";
 
-import axios from "axios";
 import Image from "next/image";
 import Header from "@/app/components/dashboard/header";
 import Activity from "@/app/components/dashboard/activities";
 import { Star, Eye, EyeOff, Copy, PackageCheck, History, Wallet2, HistoryIcon } from "lucide-react";
-import { ModalNotification } from "../components/modal/modal";
 import QuickAccess from "@/app/components/dashboard/quickaccess";
 import { useBankAccount } from "@/app/hooks/useBankAccount";
 import { useUserInfo } from "@/app/hooks/useUserInfo";
 
-
-interface Bank {
-  d_id: number;
-  acctNo: number;
-  acctName: string;
-  bankName: string;
-}
-
-interface UserInfo {
-  username: string;
-  user_balance: string;
-  packages: string;
-  role: string;
-  referree: number;
-  cashback: number;
-}
 
 interface Message {
   dash_message: string;
@@ -40,30 +22,25 @@ interface Message {
 }
 
 const DashboardPage = () => {
-  // const [bankDetails, setBankDetails] = useState<Bank>({
-  //   d_id: 0,
-  //   acctNo: 0,
-  //   acctName: "",
-  //   bankName: "",
-  // });
   const { bankDetails, isAcctN, isAcct, generateAccount } = useBankAccount();
   const { userInfo } = useUserInfo();
 
   const [copysuccess, setCopySuccess] = useState<string>("");
-  // const [isAcctN, setIsAcctN] = useState(false);
   const [role, setRole] = useState(true);
   const [dash_message, setDash_message] = useState<Message>({
     whatsapp_link: "",
     dash_message: "",
   });
-  // const [balanceColor, setBalanceColor] = useState("");
-  const [notification, setNotification] = useState("");
-  // const [isAcct, setIsAcct] = useState(true);
-  const [isErr, setIsErr] = useState(false);
   const [isAmountVisible, setIsAmountVisible] = useState(false);
+  const [link, setLink] = useState("");
 
   const user = userInfo.username ?? "";
-  const link = `${window.location.origin}/register?ref=${user}`;
+  
+  useEffect(() => {
+  if (typeof window !== "undefined") {
+    setLink(`${window.location.origin}/register?ref=${user}`);
+  }
+}, [user]);
 
   // Copy referral link
   const copyClipboard = (event: React.MouseEvent<HTMLButtonElement>) => {
