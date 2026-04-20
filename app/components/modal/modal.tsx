@@ -1,75 +1,78 @@
 "use client";
-
 import React from "react";
 
-interface ModalProps {
-  message: string;
+interface Info {
+  notification: string;
   onButtonClick: () => void;
+  title: string;
+  isNotification: boolean
 }
 
-// We can add a warning CSS variable
-// In your global CSS: :root { --color-warning: #f59e0b; }
+// Notification Modal
+export const ModalNotification: React.FC<Info> = ({ notification, title, onButtonClick }) => {
+  const titleTxt = title.charAt(0).toLocaleLowerCase();
+  return (
+    <div className="fixed inset-0 flex justify-center bg-black/40 z-50">
+      <div className="bg-white h-fit mt-24 w-full max-w-87.5 p-4 rounded-lg shadow-lg wrap-break-word">
+        <div className="flex justify-between items-center">
+          <h5 className={`font-bold ${titleTxt === 'e' ? 'text-red-600' : titleTxt === 's' ? 'text-green-600' : 'text-yellow-500'}`}>{title}</h5>
 
-const baseModalClasses =
-  "fixed inset-0 flex items-start justify-center pt-20 z-50 animate-slide-down";
+          <button
+            type="button"
+            onClick={onButtonClick}
+            className={`ml-4 text-gray-500 hover:text-gray-800 text-lg cursor-pointer`}
+          >
+            ✕
+          </button>
+        </div>
 
-const modalBoxClasses =
-  "p-4 w-11/12 md:w-1/2 rounded shadow-lg transition-all duration-300";
-
-export const ModalErr: React.FC<ModalProps> = ({ message, onButtonClick }) => (
-  <div className={baseModalClasses}>
-    <div
-      className={`${modalBoxClasses} bg-primary/20 border-l-4 border-primary text-primary`}
-    >
-      <div className="flex justify-between items-start">
-        <h5 className="font-bold text-lg">Error!</h5>
-        <button
-          onClick={onButtonClick}
-          className="font-bold hover:opacity-70 transition-opacity"
-        >
-          ×
-        </button>
+        <p className="mt-2">{notification}</p>
       </div>
-      <p className="mt-2">{message}</p>
     </div>
-  </div>
-);
+  );
+};
 
-export const ModalSus: React.FC<ModalProps> = ({ message, onButtonClick }) => (
-  <div className={baseModalClasses}>
-    <div
-      className={`${modalBoxClasses} bg-secondary/20 border-l-4 border-secondary text-secondary`}
-    >
-      <div className="flex justify-between items-start">
-        <h5 className="font-bold text-lg">Success!</h5>
-        <button
-          onClick={onButtonClick}
-          className="font-bold hover:opacity-70 transition-opacity"
-        >
-          ×
-        </button>
-      </div>
-      <p className="mt-2">{message}</p>
-    </div>
-  </div>
-);
+// // Success Modal
+// export const ModalSus: React.FC<InfoSus> = ({ notificationSus, onButtonClick }) => {
+//   return (
+//     <div className="fixed inset-0 flex justify-center bg-black/40 z-50">
+//       <div className="bg-white mt-24 w-full max-w-87.5 p-4 rounded-lg shadow-lg wrap-break-word">
+//         <div className="flex justify-between items-center">
+//           <h5 className="font-bold text-green-600">Success!</h5>
 
-export const ModalWar: React.FC<ModalProps> = ({ message, onButtonClick }) => (
-  <div className={baseModalClasses}>
-    <div
-      className={`${modalBoxClasses} bg-yellow-100 border-l-4 border-warning text-warning`}
-      style={{ backgroundColor: "var(--color-warning)", color: "white" }}
-    >
-      <div className="flex justify-between items-start">
-        <h5 className="font-bold text-lg">Warning!</h5>
-        <button
-          onClick={onButtonClick}
-          className="font-bold hover:opacity-70 transition-opacity"
-        >
-          ×
-        </button>
-      </div>
-      <p className="mt-2">{message}</p>
-    </div>
-  </div>
-);
+//           <button
+//             type="button"
+//             onClick={onButtonClick}
+//             className="ml-4 text-gray-500 hover:text-gray-800 text-lg"
+//           >
+//             ✕
+//           </button>
+//         </div>
+
+//         <p className="mt-2">{notificationSus}</p>
+//       </div>
+//     </div>
+//   );
+// };
+
+// // Warning Modal
+// export const ModalWar: React.FC<InfoWar> = ({ warning, onButtonClick }) => {
+//   return (
+//     <div className="fixed inset-0 flex justify-center bg-black/40 z-50">
+//       <div className="bg-white mt-24 w-full max-w-87.5 p-4 rounded-lg shadow-lg wrap-break-word">
+//         <div className="flex justify-between items-center">
+//           <h5 className="font-bold text-yellow-500">Warning!</h5>
+
+//           <button
+//             type="button"
+//             onClick={onButtonClick}
+//             className="ml-4 text-gray-500 hover:text-gray-800 text-lg"
+//           >
+//             ✕
+//           </button>
+//         </div>
+//         <p className="mt-2">{warning}</p>
+//       </div>
+//     </div>
+//   );
+// };

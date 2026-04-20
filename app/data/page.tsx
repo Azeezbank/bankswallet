@@ -1,11 +1,13 @@
 "use client";
-import { Check, CheckCheck, ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { detectNetwork } from "@/app/components/detectNetwork";
+import { useEffect, useState, useRef } from "react";
 import api from "../lib/api";
 import { Header } from "@/app/components/data/header";
 import BuyDataComp from "@/app/components/data/buyData";
+import TransactionConfirmation from "@/app/components/transactionConfirmation";
+import DotLoader from "../components/modal/loader";
+import NetworkSelectionPage from "@/app/components/data/networkpage";
+import { ModalNotification } from "../components/modal/modal";
+import { detectNetwork } from "@/app/components/detectNetwork";
 
 interface UserInfo {
   username: string;
@@ -23,6 +25,18 @@ interface dataType {
   name: string;
 }
 
+interface dataPlan {
+  d_id: number;
+  id: number;
+  name: string;
+  network_name: string;
+  data_type: string;
+  USER: string;
+  RESELLER: string;
+  API: string;
+  validity: string;
+}
+
 const BuyData = () => {
   const [beneficiary, setBeneficiary] = useState("frequent");
   const [page, setPage] = useState("data");
@@ -30,6 +44,18 @@ const BuyData = () => {
   const [network, setNetwork] = useState('');
   const [dataType, setDataType] = useState<dataType[]>([]);
   const [choosenDataType, setChoosenDataType] = useState("");
+  const [dataPlan, setDataPlan] = useState<dataPlan[]>([]);
+  const [choosenDataPlan, setChoosenDataPlan] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [plan, setPlan] = useState('');
+  const [isNotification, setIsNotification] = useState(false);
+  const [title, setTitle] = useState('');
+  const [notification, setNotification] = useState('');
+  const PIN_LENGTH = 4;
+  const [pin, setPin] = useState(Array(PIN_LENGTH).fill(""));
+  const [pageIndex, setPageIndex] = useState(1);
+
+  const DataPrice = choosenDataPlan;
 
   const [userInfo, setUserInfo] = useState<UserInfo>({
     username: "",
@@ -41,7 +67,7 @@ const BuyData = () => {
     Phone_number: ""
   });
 
-  const networkType = detectNetwork(userInfo.Phone_number);
+
 
   useEffect(() => {
     if (phone.length >= 4) {
@@ -73,9 +99,9 @@ const BuyData = () => {
   useEffect(() => {
 
     if (!network) {
-    setDataType([]);
-    return;
-  }
+      setDataType([]);
+      return;
+    }
 
     const fetchDataType = async () => {
       try {
@@ -93,159 +119,126 @@ const BuyData = () => {
     fetchDataType();
   }, [network]);
 
+  //Fetch data plans
+  useEffect(() => {
+    const fetchDataPlan = async () => {
+      try {
+        const response = await api.post<dataPlan[]>(
+          "/data/plans",
+          { network, choosenDataType },
+        );
+        if (response.status === 200) {
+          setDataPlan(response.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDataPlan();
+  }, [network, choosenDataType]);
+
+  const handlePrice = (e: any) => {
+    const newPrice = e.target.value;
+    setChoosenDataPlan(newPrice);
+    setPlan(e.target.selectedOptions[0].text)
+  };
+
+  //Purchase data bundle
+  const FetchDataBundle = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    try {
+      setIsProcessing(true);
+
+      const isLesser = parseFloat(userInfo.user_balance) < parseFloat(choosenDataPlan);
+
+      if (isLesser) {
+        setIsProcessing(false);
+        setNotification('Low wallet balance, please fund your wallet');
+        setIsNotification(true);
+        setTitle('Warning!')
+        return;
+      }
+
+      const pinValue = pin.join("");
+
+      const response = await api.post(
+        `/data/purchase`,
+        { plan, DataPrice, phone, network, choosenDataType, pin: pinValue },
+      );
+
+      if (response.status === 200) {
+        setIsProcessing(false);
+        setNotification(response.data.message || "Data purchase successful");
+        setIsNotification(true);
+        setTitle('Success!')
+      }
+    } catch (err: any) {
+      console.error(err);
+      setIsProcessing(false);
+      setNotification(err.response?.data?.message || "Something went wrong");
+      setIsNotification(true);
+      setTitle('Error!')
+    }
+  };
+
   return (
     <div className="px-4 sm:px-6 max-w-md mx-auto pb-10">
 
       {/* Header */}
-      <Header />
-
-      {/* Data / Airtime Switch */}
-      <div className="bg-gray-100 rounded flex my-5">
-        <button
-          type="button"
-          onClick={() => setPage("data")}
-          className={`w-full ${page === "data"
-              ? "bg-white rounded-lg text-center py-2 m-0.5 shadow"
-              : "bg-gray-100"
-            }`}
-        >
-          Data
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setPage("airtime")}
-          className={`w-full ${page === "airtime"
-              ? "bg-white rounded-lg text-center py-2 m-0.5 shadow"
-              : "bg-gray-100"
-            }`}
-        >
-          Airtime
-        </button>
-      </div>
-
-      {/* Phone Input */}
-      <div className="flex items-center justify-between">
-        <h5 className="font-semibold">Phone Number</h5>
-        <h2 className="text-primary font-semibold text-sm cursor-pointer">
-          Select From Contacts
-        </h2>
-      </div>
-
-      <input
-        type="tel"
-        inputMode="numeric"
-        maxLength={11}
-        pattern="[0-9]{11}"
-        placeholder="07012345678"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        className="border border-gray-200 rounded-lg px-4 py-2 w-full mt-1 outline-none focus:ring-2 focus:ring-primary"
-        required
+      {isProcessing && <DotLoader />}
+      {isNotification && <ModalNotification notification={notification} title={title} onButtonClick={() => setIsNotification(false)} isNotification={isNotification} />}
+      <Header
+        pageIndex={pageIndex}
+        setPageIndex={setPageIndex}
       />
 
-      {/* Network Selection */}
-      <div className="mt-5 border-b border-gray-200 pb-5">
-        <h2 className="font-semibold">Select Network</h2>
+      {pageIndex === 1 && (
+        <NetworkSelectionPage
+          page={page}
+          phone={phone}
+          network={network}
+          plan={plan}
+          beneficiary={beneficiary}
+          userInfo={userInfo}
+          setPage={setPage}
+          setPhone={setPhone}
+          setNetwork={setNetwork}
+          setPlan={setPlan}
+          setBeneficiary={setBeneficiary}
+          setPageIndex={setPageIndex}
+        />
+      )}
+      {pageIndex === 2 && (
+        <BuyDataComp
+          beneficiary={beneficiary}
+          network={network}
+          phone={phone}
+          dataType={dataType}
+          choosenDataType={choosenDataType}
+          setChoosenDataType={setChoosenDataType}
+          dataPlan={dataPlan}
+          choosenDataPlan={choosenDataPlan}
+          plan={plan}
+          setChoosenDataPlan={setChoosenDataPlan}
+          setPlan={setPlan}
+          handlePrice={handlePrice}
+          setPageIndex={setPageIndex}
+        />
+      )}
 
-        <div className="flex gap-3 mt-2">
-          {["mtn", "airtel", "glo", "9mobile"].map((n, i) => (
-            <div className="relative" key={i}>
-              <Image
-                key={n}
-                src={`/${n}.png`}
-                alt={n}
-                width={40}
-                height={40}
-                onClick={() => setNetwork(n)}
-                className={`rounded-full cursor-pointer hover:scale-105 transition ${network === n ? "border-2 border-gray-500" : ""}`}
-              />
-              {network === n && (
-                <span className="absolute top-3 left-3 bg-primary text-white rounded-full p-0.5">
-                  <Check size={12} />
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <button
-          type="button"
-          className={`bg-gradient rounded-lg text-center w-full my-5 text-white py-2 ${phone === '' ? "cursor-not-allowed" : "cursor-pointer"}`}
-        >
-          Continue
-        </button>
-      </div>
-
-      {/* Beneficiaries */}
-      <div>
-        <div className="flex justify-between items-center my-4">
-          <h3 className="font-semibold">Beneficiaries</h3>
-          <h3 className="text-primary font-semibold text-sm cursor-pointer">
-            View All
-          </h3>
-        </div>
-
-        {/* Beneficiary Tabs */}
-        <div className="bg-gray-100 rounded flex">
-          <button
-            type="button"
-            onClick={() => setBeneficiary("frequent")}
-            className={`w-full ${beneficiary === "frequent"
-                ? "bg-white rounded-lg text-center py-2 m-0.5 shadow"
-                : "bg-gray-100"
-              }`}
-          >
-            Frequent
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setBeneficiary("saved")}
-            className={`w-full ${beneficiary === "saved"
-                ? "bg-white rounded-lg text-center py-2 m-0.5 shadow"
-                : "bg-gray-100"
-              }`}
-          >
-            Saved
-          </button>
-        </div>
-
-        {/* My Number */}
-        {beneficiary === 'frequent' && (
-          <div className="flex justify-between items-center bg-gray-100 px-3 py-2 rounded mt-3">
-            <div className="flex gap-3 items-center">
-
-              <Image
-                src={`/${networkType || "unknown"}.png`}
-                alt="network"
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
-
-              <div>
-                <h3 className="font-semibold">Me</h3>
-                <p className="text-sm text-gray-600">
-                  {userInfo.Phone_number} | {networkType}
-                </p>
-              </div>
-
-            </div>
-
-            <ChevronRight size={22} />
-          </div>
-        )}
-      </div>
-
-      <BuyDataComp
-        beneficiary={beneficiary}
-        network={network}
-        phone={phone}
-        dataType={dataType}
-        choosenDataType={choosenDataType}
-        setChoosenDataType={setChoosenDataType}
-      />
+      {pageIndex === 3 && (
+        <TransactionConfirmation
+          choosenDataPlan={choosenDataPlan}
+          phone={phone}
+          page={page}
+          network={network}
+          plan={plan}
+          pin={pin}
+          setPin={setPin}
+          FetchDataBundle={FetchDataBundle}
+        />
+      )}
     </div>
   );
 };

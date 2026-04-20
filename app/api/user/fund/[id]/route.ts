@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/Prisma.client";
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const amount = parseFloat(body.amount);
-    const id = parseInt(params.id);
+    const id = Number(req.nextUrl.pathname.split("/").pop());
 
     if (!amount || isNaN(amount)) {
       return NextResponse.json({ message: "Invalid amount" }, { status: 400 });

@@ -12,12 +12,16 @@ const brico = Bricolage_Grotesque({
   variable: "--font-brico",
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body
-        className={`$${brico.variable} antialiased 
-                   font-sans bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100`}
+        className={`${brico.className} antialiased
+        bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100`}
       >
         {children}
       </body>

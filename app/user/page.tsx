@@ -1,11 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";
 import { Typewriter } from "react-simple-typewriter";
 
 import HomeLayout from "./layout";
-import { ModalErr } from "@/app/components/modal/modal";
 import api from "@/app/lib/api";
 
 import axios from "axios";
@@ -13,6 +12,10 @@ import Image from "next/image";
 import Header from "@/app/components/dashboard/header";
 import Activity from "@/app/components/dashboard/activities";
 import { Star, Eye, EyeOff, Copy, PackageCheck, History, Wallet2, HistoryIcon } from "lucide-react";
+import { ModalNotification } from "../components/modal/modal";
+import QuickAccess from "@/app/components/dashboard/quickaccess";
+import { useBankAccount } from "@/app/hooks/useBankAccount";
+import { useUserInfo } from "@/app/hooks/useUserInfo";
 
 
 interface Bank {
@@ -37,30 +40,25 @@ interface Message {
 }
 
 const DashboardPage = () => {
-  const [bankDetails, setBankDetails] = useState<Bank>({
-    d_id: 0,
-    acctNo: 0,
-    acctName: "",
-    bankName: "",
-  });
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    username: "",
-    user_balance: "",
-    role: "",
-    packages: "",
-    cashback: 0,
-    referree: 0,
-  });
+  // const [bankDetails, setBankDetails] = useState<Bank>({
+  //   d_id: 0,
+  //   acctNo: 0,
+  //   acctName: "",
+  //   bankName: "",
+  // });
+  const { bankDetails, isAcctN, isAcct, generateAccount } = useBankAccount();
+  const { userInfo } = useUserInfo();
+
   const [copysuccess, setCopySuccess] = useState<string>("");
-  const [isAcctN, setIsAcctN] = useState(false);
+  // const [isAcctN, setIsAcctN] = useState(false);
   const [role, setRole] = useState(true);
   const [dash_message, setDash_message] = useState<Message>({
     whatsapp_link: "",
     dash_message: "",
   });
-  const [balanceColor, setBalanceColor] = useState("");
+  // const [balanceColor, setBalanceColor] = useState("");
   const [notification, setNotification] = useState("");
-  const [isAcct, setIsAcct] = useState(true);
+  // const [isAcct, setIsAcct] = useState(true);
   const [isErr, setIsErr] = useState(false);
   const [isAmountVisible, setIsAmountVisible] = useState(false);
 
@@ -77,65 +75,41 @@ const DashboardPage = () => {
     alert(copysuccess);
   };
 
-  // Generate account number
-  const handleGenerateAcct = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsAcct(false);
-    try {
-      const response = await api.post(
-        `/monnify/acct`,
-        {}
-      );
-      if (response.status === 200) {
-        console.log("Account generated");
-        setIsAcct(true);
-      }
-    } catch (err: any) {
-      console.error(
-        "Error generating",
-        err.response?.data.message || err.message
-      );
-      setIsErr(true);
-      setNotification(err.response?.data?.message);
-      setIsAcct(true);
-    }
-  };
-
   // Fetch user information
-  useEffect(() => {
-    const handleUserInfo = async () => {
-      try {
-        const response = await api.get<UserInfo>(
-          `/user/info`,
-        );
-        if (response.status === 200) {
-          setUserInfo(response.data);
-        }
-      } catch (err: any) {
-        console.error(err.response?.data.message || err.message);
-      }
-    };
-    handleUserInfo();
-  }, []);
+  // useEffect(() => {
+  //   const handleUserInfo = async () => {
+  //     try {
+  //       const response = await api.get<UserInfo>(
+  //         `/user/info`,
+  //       );
+  //       if (response.status === 200) {
+  //         setUserInfo(response.data);
+  //       }
+  //     } catch (err: any) {
+  //       console.error(err.response?.data.message || err.message);
+  //     }
+  //   };
+  //   handleUserInfo();
+  // }, []);
 
   // Fetch account details
-  useEffect(() => {
-    const bankDetail = async () => {
-      try {
-        const response = await api.post<Bank>(
-          `/user/bankacct`,
-          {},
-        );
-        if (response.status === 200) {
-          setBankDetails(response.data);
-          setIsAcctN(true);
-        }
-      } catch (err: any) {
-        console.error(err.response?.data.message || err.message);
-      }
-    };
-    bankDetail();
-  }, []);
+  // useEffect(() => {
+  //   const bankDetail = async () => {
+  //     try {
+  //       const response = await api.post<Bank>(
+  //         `/user/bankacct`,
+  //         {},
+  //       );
+  //       if (response.status === 200) {
+  //         setBankDetails(response.data);
+  //         setIsAcctN(true);
+  //       }
+  //     } catch (err: any) {
+  //       console.error(err.response?.data.message || err.message);
+  //     }
+  //   };
+  //   bankDetail();
+  // }, []);
 
   // Fetch dashboard message
   useEffect(() => {
@@ -165,19 +139,19 @@ const DashboardPage = () => {
   }, [userInfo]);
 
   // Add wallet status indicator
-  useEffect(() => {
-    const handleblink = () => {
-      const balance = Number(userInfo.user_balance);
-      if (balance >= 1000) {
-        setBalanceColor("enoughbalance");
-      } else if (balance < 1000 && balance > 500) {
-        setBalanceColor("lowbalance");
-      } else if (balance < 500) {
-        setBalanceColor("insulficientbalance");
-      }
-    };
-    handleblink();
-  }, [userInfo]);
+  // useEffect(() => {
+  //   const handleblink = () => {
+  //     const balance = Number(userInfo.user_balance);
+  //     if (balance >= 1000) {
+  //       setBalanceColor("enoughbalance");
+  //     } else if (balance < 1000 && balance > 500) {
+  //       setBalanceColor("lowbalance");
+  //     } else if (balance < 500) {
+  //       setBalanceColor("insulficientbalance");
+  //     }
+  //   };
+  //   handleblink();
+  // }, [userInfo]);
 
 
   return (
@@ -297,7 +271,7 @@ const DashboardPage = () => {
                 ) : (
                   <span
                     className="cursor-pointer text-primary font-semibold hover:underline"
-                    onClick={handleGenerateAcct}
+                    onClick={generateAccount}
                   >
                     {isAcct ? (
                       <>
@@ -411,11 +385,11 @@ const DashboardPage = () => {
               <div className="text-3xl p-4 bg-primary text-white rounded-full">
                 <i className="bi bi-calendar-event-fill"></i>
               </div>
-              <div className="ml-4">
+              {/* <div className="ml-4">
                 <p className="text-gray-500">Wallet Balance</p>
                 <div className={`w-20 h-2 mt-1 rounded ${balanceColor}`}></div>
                 <p className="font-bold mt-1"># {userInfo.user_balance}</p>
-              </div>
+              </div> */}
             </div>
 
             {/* Cashback */}
@@ -581,9 +555,9 @@ const DashboardPage = () => {
         </div>
 
         {/* Error Modal */}
-        {isErr && (
-          <ModalErr message={notification} onButtonClick={() => setIsErr(false)} />
-        )}
+        {/* {isErr && (
+          <ModalNotification notification={notification} onButtonClick={() => setIsErr(false)} />
+        )} */}
       </div>
 
 
@@ -618,6 +592,7 @@ const DashboardPage = () => {
             <button
               type="button"
               onClick={() => setIsAmountVisible(!isAmountVisible)}
+              className="outline-none"
             >
               {isAmountVisible ? (
                 <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -644,10 +619,12 @@ const DashboardPage = () => {
 
           {/* Action buttons */}
           <div className="flex flex-wrap justify-center gap-3 mt-6 w-full max-w-sm">
-            <button className="flex items-center justify-center gap-2 bg-white/20 px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto">
-              <Wallet2 className="w-4 h-4 sm:w-5 sm:h-5" />
-              Fund Wallet
-            </button>
+            <Link href="/user/wallet">
+              <button className="flex items-center justify-center gap-2 bg-white/20 px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto">
+                <Wallet2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                Fund Wallet
+              </button>
+            </Link>
 
             <button className="flex items-center justify-center gap-2 bg-white/20 px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto">
               <History className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -658,6 +635,9 @@ const DashboardPage = () => {
 
         {/* Activities center */}
         <Activity whatsappLink={dash_message.whatsapp_link} />
+
+        {/* Quick Access */}
+        <QuickAccess />
       </div>
     </HomeLayout>
   );

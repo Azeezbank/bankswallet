@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/Prisma.client";
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest) {
   try {
-    const id = parseInt(params.id);
+    const id = Number(req.nextUrl.pathname.split("/").pop());
     const body = await req.json();
     const { fieldName, value } = body;
 

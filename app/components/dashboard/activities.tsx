@@ -43,43 +43,6 @@ const Activity = ({ whatsappLink }: { whatsappLink: string }) => {
             </p>
           </div>
         </div>
-
-        {/* Quick access */}
-        <h2 className="font-semibold mt-8 mb-3">Quick Access</h2>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          <Link href="/data">
-            <div className="bg-gray-100 rounded-lg shadow flex flex-col items-center py-3 hover:bg-gray-200 transition">
-              <Image src="/airtime.svg" alt="Airtime" width={40} height={40} />
-              <h3 className="text-xs sm:text-sm font-semibold mt-1">
-                Buy Airtime
-              </h3>
-            </div>
-          </Link>
-
-          <Link href="/data">
-            <div className="bg-gray-100 rounded-lg shadow flex flex-col items-center py-3 hover:bg-gray-200 transition">
-              <Image src="/data.jpg" alt="Data" width={40} height={40} />
-              <h3 className="text-xs sm:text-sm font-semibold mt-1">
-                Buy Data
-              </h3>
-            </div>
-          </Link>
-
-          <Link href={whatsappLink}>
-            <div className="bg-gray-100 rounded-lg shadow flex flex-col items-center py-3 hover:bg-gray-200 transition">
-              <Image
-                src="/airtime2cash - Copy.jpg"
-                alt="Airtime to Cash"
-                width={40}
-                height={40}
-              />
-              <h3 className="text-xs sm:text-sm font-semibold mt-1 text-center">
-                Airtime to Cash
-              </h3>
-            </div>
-          </Link>
-        </div>
       </div>
     </section>
   );

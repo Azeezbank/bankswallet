@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/Prisma.client";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+
+export async function GET(req: NextRequest) {
   try {
-    const id = parseInt(params.id);
+    const id = Number(req.nextUrl.pathname.split("/").pop());
+
+    if (isNaN(id)) {
+      return NextResponse.json(
+        { message: "Invalid user ID" },
+        { status: 400 }
+      );
+    }
 
     const user = await prisma.users.findUnique({
       where: { d_id: id },
@@ -19,11 +27,20 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       },
     });
 
-    if (!user) return NextResponse.json({ message: "User not found" }, { status: 404 });
+    if (!user) {
+      return NextResponse.json(
+        { message: "User not found" },
+        { status: 404 }
+      );
+    }
 
-    return NextResponse.json(user, { status: 200 });
-  } catch (err: any) {
+    return NextResponse.json(user);
+  } catch (err) {
     console.error("Failed to select user details", err);
-    return NextResponse.json({ message: "Failed to select user details" }, { status: 500 });
+
+    return NextResponse.json(
+      { message: "Failed to select user details" },
+      { status: 500 }
+    );
   }
 }
