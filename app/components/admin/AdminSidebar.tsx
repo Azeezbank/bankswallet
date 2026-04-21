@@ -18,7 +18,7 @@ const menu = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "API Docs", href: "/admin/api-docs", icon: FileText },
   { name: "Users", href: "/admin/users", icon: Users },
-  { name: "Transactions", href: "/admin/transactions", icon: ArrowLeftRight },
+  { name: "Transactions", href: "/admin/histories", icon: ArrowLeftRight },
 ];
 
 const servicesMenu = [

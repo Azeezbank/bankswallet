@@ -97,7 +97,6 @@ export default function UsersPage() {
       {/* Controls */}
 
       <div className="bg-white p-4 rounded-xl shadow sm:flex flex-wrap items-center justify-between">
-        {/* <div className="bg-white p-4 rounded-xl shadow flex flex-col md:flex-row gap-4 md:items-center md:justify-between"> */}
         {/* Search */}
         <div className="flex gap-2">
           {/* <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto"> */}
@@ -120,7 +119,7 @@ export default function UsersPage() {
         </div>
 
         {/* Page */}
-        <div className="flex gap-4 justify-between">
+        <div className="flex gap-4 justify-between mt-2 md:mt-0">
           <div className="flex items-center gap-2">
 
             <span className="text-sm">
@@ -251,6 +250,7 @@ export default function UsersPage() {
           </tbody>
 
         </table>
+         </div>
 
         <div className="flex items-center justify-between mt-4">
 
@@ -275,8 +275,6 @@ export default function UsersPage() {
           </button>
 
         </div>
-
-      </div>
 
     </div>
   );

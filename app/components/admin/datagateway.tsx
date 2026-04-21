@@ -184,6 +184,7 @@ const DataGateway: React.FC = () => {
                 </div>
 
                 <div className="w-full overflow-x-auto">
+  <div className="min-w-[900px]">
 
                     <table className="text-sm">
 
@@ -308,6 +309,7 @@ const DataGateway: React.FC = () => {
                         </tbody>
 
                     </table>
+                    </div>
 
                 </div>
 
