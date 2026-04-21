@@ -4,13 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
-import MarqueeOffer from "./components/MarqueeOffer";
 import AboutSection from "./components/AboutSection";
-import ServicesGrid from "./components/ServicesGrid";
-import ContactSection from "./components/ContactSection";
 import PlansTable from "./components/PlansTable";
-import WorkProcess from "./components/WorkProcess";
-import PartnersMarquee from "./components/PartnersMarquee";
 import Footer from "./components/Footer";
 
 export interface Plan {
@@ -52,18 +47,13 @@ export default function LandingPage() {
     <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
       <Navbar />
       <HeroSection />
-      <MarqueeOffer />
       <AboutSection />
-      <ServicesGrid />
-      <ContactSection />
       <PlansTable
         mtn={plans}    
         airtel={airtelPlan}
         glo={gloPlan}
         nimobile={mobile}  
       />
-      <WorkProcess />
-      <PartnersMarquee />
       <Footer />
     </div>
   );

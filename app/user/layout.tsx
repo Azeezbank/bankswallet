@@ -129,8 +129,7 @@ export default function HomeLayout({ children }: Props) {
           isOpen ? "with-margin" : "with-no-margin"
         } w-full`}
       >
-        <NavBar sideBarClickHandler={handleVisible} />
-        <main className="p-6">{children}</main>
+        <main>{children}</main>
       </div>
     </div>
   );
