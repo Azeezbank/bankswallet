@@ -32,10 +32,10 @@ model airtimeHist {
   d_id             Int       @id @default(autoincrement())
   id               Int?
   network          String?
-  amount           String?
+  amount           Decimal  @default(0.00) @db.Decimal(10, 2)
   phone_number     String?
-  previous_balance String?
-  new_balance      String?
+  previous_balance Decimal  @default(0.00) @db.Decimal(10, 2)
+  new_balance      Decimal  @default(0.00) @db.Decimal(10, 2)
   time             DateTime?
   status           String?
   airtimeType      String?

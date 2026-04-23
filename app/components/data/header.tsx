@@ -5,11 +5,12 @@ import React from "react";
 
 interface HeaderProps {
   pageIndex: number;
+  buy: string;
   setPageIndex: React.Dispatch<React.SetStateAction<number>>;
 }
-export const Header = ({ pageIndex, setPageIndex }: HeaderProps) => {
+export const Header = ({ pageIndex, setPageIndex, buy }: HeaderProps) => {
   return (
-    <div>
+    <div className="mb-5">
       {/* Header */}
       <div className="flex items-center justify-between pt-5">
         {pageIndex === 1 ? (
@@ -22,15 +23,11 @@ export const Header = ({ pageIndex, setPageIndex }: HeaderProps) => {
           </button>
         )}
 
-        <h2 className="font-bold text-lg">Buy Data</h2>
+        <h2 className="font-bold text-lg">{buy}</h2>
 
-        <Image
-          src="/SGN_09_08_2022_1662626364399-removebg-preview.png"
-          alt="logo"
-          width={40}
-          height={40}
-          className="rounded-full"
-        />
+        <div className="w-7 h-7 rounded-lg bg-gradient flex items-center justify-center text-white font-bold">
+            B
+          </div>
       </div>
     </div>
   )

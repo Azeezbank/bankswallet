@@ -2,17 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/Prisma.client";
 import axios from "axios";
-import { decrypt } from "@/app/utils/crypto"; // adjust path if needed
-
-
-type RequestBody = {
-  plan: string;
-  DataPrice: number;
-  phone: string;
-  network: string;
-  choosenDataType: string;
-  pin: string;
-};
+import { decrypt } from "@/app/utils/crypto";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
@@ -28,8 +19,8 @@ export async function POST(req: NextRequest) {
     const userId = Number(req.headers.get("x-user-id"));
     if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-    let wallet = 0;
-    let newBalance = 0;
+    let wallet = new Decimal(0);
+    let newBalance = new Decimal(0);
 
 
     try {
@@ -115,11 +106,11 @@ export async function POST(req: NextRequest) {
         const headers = { Authorization: decryptKey, "Content-Type": "application/json" };
 
         // 6. Wallet check
-        wallet = parseFloat(user.user_balance.toString());
-        if (wallet < parseFloat(DataPrice)) {
+        wallet = new Decimal(user.user_balance);
+        if (wallet.lt(new Decimal(DataPrice))) {
             return NextResponse.json({ message: "Insufficient wallet balance" }, { status: 400 });
         }
-        newBalance = wallet - parseFloat(DataPrice);
+        newBalance = wallet.minus(new Decimal(DataPrice));
 
         await prisma.users.update({
             where: { d_id: userId },
@@ -151,13 +142,13 @@ export async function POST(req: NextRequest) {
         });
 
         // 10. Reward cashback
-        try {
-            const cashBack = (0.2 / 100) * parseFloat(DataPrice);
-            const totalCashBack = Number(user.cashback) + cashBack;
-            await prisma.users.update({ where: { d_id: userId }, data: { cashback: totalCashBack.toFixed(2) } });
-        } catch (err) {
-            console.error("CashBack failed, transaction still successful", err);
-        }
+        // try {
+        //     const cashBack = new Decimal(0.2 / 100).times(new Decimal(DataPrice));
+        //     const totalCashBack = (user.cashback).plus(cashBack);
+        //     await prisma.users.update({ where: { d_id: userId }, data: { cashback: totalCashBack } });
+        // } catch (err) {
+        //     console.error("CashBack failed, transaction still successful", err);
+        // }
 
         return NextResponse.json({ message: "Data purchase successful" }, { status: 200 });
     } catch (err) {
@@ -165,7 +156,7 @@ export async function POST(req: NextRequest) {
 
         await prisma.users.update({ where: { d_id: userId }, data: { user_balance: wallet } });
         await prisma.dataTransactionHist.create({
-            data: { id: userId, plan, phone_number: phone, amount: parseFloat(DataPrice), balance_before: newBalance, balance_after: wallet, status: 'Failed', condition: "Failed" }
+            data: { id: userId, plan, phone_number: phone, amount: new Decimal(DataPrice), balance_before: newBalance, balance_after: wallet, status: 'Failed', condition: "Failed" }
         });
 
         return NextResponse.json({ message: "Failed to fetch data from external API, balance refunded" }, { status: 500 });

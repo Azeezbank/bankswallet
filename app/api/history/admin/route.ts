@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
     const paymentHistory = paymentTx.map((tx) => ({
       service: "payment",
       type: "Wallet Funding",
-      receiver: "Card Payment",
+      receiver: tx.payment_method,
       amount: tx.amount,
       status: tx.payment_status,
       date: tx.paid_on,
@@ -88,12 +88,40 @@ export async function GET(req: NextRequest) {
 
     const paginated = history.slice(skip, skip + limit);
 
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+
+    const dailyDataTransactions = await prisma.dataTransactionHist.count({
+      where: {
+        time: {
+          gte: startOfToday,
+          lte: endOfToday,
+        },
+      },
+    });
+
+    const dailyAirtimeTransactions = await prisma.airtimeHist.count({
+      where: {
+        time: {
+          gte: startOfToday,
+          lte: endOfToday,
+        },
+      },
+    });
+
+    const dailyTransactions = dailyDataTransactions + dailyAirtimeTransactions;
+
+
     return NextResponse.json({
       result: paginated,
       total: history.length,
       totalPage: Math.ceil(history.length / limit),
       page,
       limit,
+      dailyTransactions,
     });
 
   } catch (err) {

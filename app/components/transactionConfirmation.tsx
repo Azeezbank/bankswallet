@@ -7,11 +7,15 @@ interface ITransactionConfirmationProps {
     network: string;
     plan: string;
     pin: string[],
+    phoneTitle: string;
+    ProductTitle: string;
+    NetworkTitile: string;
+    planTitile: string;
     setPin: (val: string[]) => void
-    FetchDataBundle: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    Fetch: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 const TransactionConfirmation = ({ choosenDataPlan, phone, page, network, plan,
-    pin, setPin, FetchDataBundle
+    pin, setPin, Fetch, phoneTitle, ProductTitle, NetworkTitile, planTitile
 }: ITransactionConfirmationProps) => {
     return (
         <div>
@@ -23,13 +27,13 @@ const TransactionConfirmation = ({ choosenDataPlan, phone, page, network, plan,
             <span className="flex w-full h-0.5 bg-gray-200 my-5"></span>
 
             <div className="grid grid-cols-2 gap-y-3">
-                <h5 className="text-gray-500">Phone Number</h5>
+                <h5 className="text-gray-500">{phoneTitle}</h5>
                 <h5 className="text-end">{phone}</h5>
-                <h5 className="text-gray-500">Product</h5>
+                <h5 className="text-gray-500">{ProductTitle}</h5>
                 <h5 className="text-end capitalize">{page}</h5>
-                <h5 className="text-gray-500">Network</h5>
+                <h5 className="text-gray-500">{NetworkTitile}</h5>
                 <h5 className="text-end uppercase">{network}</h5>
-                <h5 className="text-gray-500">Data Bundle</h5>
+                <h5 className="text-gray-500">{planTitile}</h5>
                 <h5 className="text-end uppercase text-sm">{plan}</h5>
             </div>
 
@@ -40,7 +44,7 @@ const TransactionConfirmation = ({ choosenDataPlan, phone, page, network, plan,
                 <PinInput
                     pin={pin}
                     setPin={setPin}
-                    FetchDataBundle={FetchDataBundle}
+                    FetchDataBundle={Fetch}
                 />
             </div>
         </div>

@@ -3,8 +3,13 @@
 import {
   Bell,
 } from "lucide-react";
+import { useUsersDetails } from "@/app/hooks/useUserInfo";
+import { useAdminHistory } from "@/app/hooks/adminHistories";
 
 export default function AdminDashboard() {
+
+  const { totalUser, totalWallet } = useUsersDetails({page: 1, limit: 10});
+  const { dailyTransactions } = useAdminHistory();
   return (
     <div className="min-h-screen flex bg-app-gradient">
 
@@ -28,7 +33,7 @@ export default function AdminDashboard() {
             </button>
 
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-full bg-gradient"></div>
+              <div className="w-9 h-9 rounded-full bg-gradient flex items-center justify-center text-white font-bold">B</div>
               <span className="text-sm font-medium">
                 Admin
               </span>
@@ -43,17 +48,17 @@ export default function AdminDashboard() {
 
           <div className="bg-white p-5 rounded-xl shadow-sm">
             <p className="text-gray-500 text-sm">Total Users</p>
-            <h2 className="text-2xl font-semibold mt-1">1,284</h2>
+            <h2 className="text-2xl font-semibold mt-1">{totalUser}</h2>
           </div>
 
           <div className="bg-white p-5 rounded-xl shadow-sm">
             <p className="text-gray-500 text-sm">Total Wallet Balance</p>
-            <h2 className="text-2xl font-semibold mt-1">₦4,820,000</h2>
+            <h2 className="text-2xl font-semibold mt-1">₦{totalWallet}</h2>
           </div>
 
           <div className="bg-white p-5 rounded-xl shadow-sm">
             <p className="text-gray-500 text-sm">Transactions Today</p>
-            <h2 className="text-2xl font-semibold mt-1">382</h2>
+            <h2 className="text-2xl font-semibold mt-1">{dailyTransactions}</h2>
           </div>
 
           <div className="bg-white p-5 rounded-xl shadow-sm">

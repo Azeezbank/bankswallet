@@ -3,16 +3,6 @@ import Image from "next/image";
 import { AccountToDebit } from "@/app/components/accountToDebit";
 import React from "react";
 
-interface UserInfo {
-    username: string;
-    user_balance: string;
-    packages: string;
-    role: string;
-    referree: number;
-    cashback: number;
-    Phone_number: string;
-}
-
 interface dataType {
     d_id: number;
     id: number;

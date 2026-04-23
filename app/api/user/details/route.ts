@@ -27,9 +27,17 @@ export async function GET(req: NextRequest) {
       },
     });
 
+    const result = await prisma.users.aggregate({
+  _sum: {
+    user_balance: true,
+  },
+});
+
+const totalUserWallet = result._sum.user_balance || 0;
+
     const totalPage = Math.ceil(total / limit);
 
-    return NextResponse.json({ total, page, limit, totalPage, data }, { status: 200 });
+    return NextResponse.json({ total, page, limit, totalPage, data, totalUserWallet }, { status: 200 });
   } catch (err: any) {
     console.error("Error selecting user details", err.message);
     return NextResponse.json({ message: "Error selecting user details" }, { status: 500 });

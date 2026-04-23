@@ -56,7 +56,7 @@ const DataGateway: React.FC = () => {
         setAlPlan(newPlans);
     };
 
-    const submitPlans = async (e: React.FormEvent) => {
+    const submitPlans = async (e: any) => {
         e.preventDefault();
         setIsUpdating(true);
 
@@ -184,131 +184,131 @@ const DataGateway: React.FC = () => {
                 </div>
 
                 <div className="w-full overflow-x-auto">
-  <div className="min-w-[900px]">
+                    <div className="min-w-225">
 
-                    <table className="text-sm">
+                        <table className="text-sm">
 
-                        <thead className="bg-gray-50 text-gray-600">
-                            <tr>
-                                <th className="p-3 text-left">ID</th>
-                                <th className="p-3 text-left">Name</th>
-                                <th className="p-3 text-left">Network</th>
-                                <th className="p-3 text-left">Type</th>
-                                <th className="p-3 text-left">Validity</th>
-                                <th className="p-3 text-left">User</th>
-                                <th className="p-3 text-left">Reseller</th>
-                                <th className="p-3 text-left">API</th>
-                                <th className="p-3 text-left">Status</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-
-                            {allPlan.map((plan, index) => (
-                                <tr
-                                    key={index}
-                                    className="border-t hover:bg-gray-50"
-                                >
-
-                                    <td className="p-2">
-                                        <input
-                                            className="border rounded px-2 py-1 w-20"
-                                            defaultValue={plan.id}
-                                            onChange={(e) =>
-                                                handlePlans(index, "id", e.target.value)
-                                            }
-                                        />
-                                    </td>
-
-                                    <td className="p-2">
-                                        <input
-                                            className="border rounded px-2 py-1 w-40"
-                                            defaultValue={plan.name}
-                                            onChange={(e) =>
-                                                handlePlans(index, "name", e.target.value)
-                                            }
-                                        />
-                                    </td>
-
-                                    <td className="p-2">
-                                        <input
-                                            className="border rounded px-2 py-1 w-32"
-                                            defaultValue={plan.network_name}
-                                            onChange={(e) =>
-                                                handlePlans(index, "network_name", e.target.value)
-                                            }
-                                        />
-                                    </td>
-
-                                    <td className="p-2">
-                                        <input
-                                            className="border rounded px-2 py-1 w-32"
-                                            defaultValue={plan.data_type}
-                                            onChange={(e) =>
-                                                handlePlans(index, "data_type", e.target.value)
-                                            }
-                                        />
-                                    </td>
-
-                                    <td className="p-2">
-                                        <input
-                                            className="border rounded px-2 py-1 w-28"
-                                            defaultValue={plan.validity}
-                                            onChange={(e) =>
-                                                handlePlans(index, "validity", e.target.value)
-                                            }
-                                        />
-                                    </td>
-
-                                    <td className="p-2">
-                                        <input
-                                            className="border rounded px-2 py-1 w-24"
-                                            defaultValue={plan.USER}
-                                            onChange={(e) =>
-                                                handlePlans(index, "USER", e.target.value)
-                                            }
-                                        />
-                                    </td>
-
-                                    <td className="p-2">
-                                        <input
-                                            className="border rounded px-2 py-1 w-24"
-                                            defaultValue={plan.RESELLER}
-                                            onChange={(e) =>
-                                                handlePlans(index, "RESELLER", e.target.value)
-                                            }
-                                        />
-                                    </td>
-
-                                    <td className="p-2">
-                                        <input
-                                            className="border rounded px-2 py-1 w-24"
-                                            defaultValue={plan.API}
-                                            onChange={(e) =>
-                                                handlePlans(index, "API", e.target.value)
-                                            }
-                                        />
-                                    </td>
-
-                                    <td className="p-2">
-                                        <select
-                                            className="border rounded px-2 py-1"
-                                            defaultValue={plan.is_active}
-                                            onChange={(e) =>
-                                                handlePlans(index, "is_active", e.target.value)
-                                            }
-                                        >
-                                            <option>active</option>
-                                            <option>disabled</option>
-                                        </select>
-                                    </td>
-
+                            <thead className="bg-gray-50 text-gray-600">
+                                <tr>
+                                    <th className="p-3 text-left">ID</th>
+                                    <th className="p-3 text-left">Name</th>
+                                    <th className="p-3 text-left">Network</th>
+                                    <th className="p-3 text-left">Type</th>
+                                    <th className="p-3 text-left">Validity</th>
+                                    <th className="p-3 text-left">User</th>
+                                    <th className="p-3 text-left">Reseller</th>
+                                    <th className="p-3 text-left">API</th>
+                                    <th className="p-3 text-left">Status</th>
                                 </tr>
-                            ))}
+                            </thead>
 
-                        </tbody>
+                            <tbody>
 
-                    </table>
+                                {allPlan.map((plan, index) => (
+                                    <tr
+                                        key={index}
+                                        className="border-t hover:bg-gray-50"
+                                    >
+
+                                        <td className="p-2">
+                                            <input
+                                                className="border rounded px-2 py-1 w-20"
+                                                defaultValue={plan.id}
+                                                onChange={(e) =>
+                                                    handlePlans(index, "id", e.target.value)
+                                                }
+                                            />
+                                        </td>
+
+                                        <td className="p-2">
+                                            <input
+                                                className="border rounded px-2 py-1 w-40"
+                                                defaultValue={plan.name}
+                                                onChange={(e) =>
+                                                    handlePlans(index, "name", e.target.value)
+                                                }
+                                            />
+                                        </td>
+
+                                        <td className="p-2">
+                                            <input
+                                                className="border rounded px-2 py-1 w-32"
+                                                defaultValue={plan.network_name}
+                                                onChange={(e) =>
+                                                    handlePlans(index, "network_name", e.target.value)
+                                                }
+                                            />
+                                        </td>
+
+                                        <td className="p-2">
+                                            <input
+                                                className="border rounded px-2 py-1 w-32"
+                                                defaultValue={plan.data_type}
+                                                onChange={(e) =>
+                                                    handlePlans(index, "data_type", e.target.value)
+                                                }
+                                            />
+                                        </td>
+
+                                        <td className="p-2">
+                                            <input
+                                                className="border rounded px-2 py-1 w-28"
+                                                defaultValue={plan.validity}
+                                                onChange={(e) =>
+                                                    handlePlans(index, "validity", e.target.value)
+                                                }
+                                            />
+                                        </td>
+
+                                        <td className="p-2">
+                                            <input
+                                                className="border rounded px-2 py-1 w-24"
+                                                defaultValue={plan.USER}
+                                                onChange={(e) =>
+                                                    handlePlans(index, "USER", e.target.value)
+                                                }
+                                            />
+                                        </td>
+
+                                        <td className="p-2">
+                                            <input
+                                                className="border rounded px-2 py-1 w-24"
+                                                defaultValue={plan.RESELLER}
+                                                onChange={(e) =>
+                                                    handlePlans(index, "RESELLER", e.target.value)
+                                                }
+                                            />
+                                        </td>
+
+                                        <td className="p-2">
+                                            <input
+                                                className="border rounded px-2 py-1 w-24"
+                                                defaultValue={plan.API}
+                                                onChange={(e) =>
+                                                    handlePlans(index, "API", e.target.value)
+                                                }
+                                            />
+                                        </td>
+
+                                        <td className="p-2">
+                                            <select
+                                                className="border rounded px-2 py-1"
+                                                defaultValue={plan.is_active}
+                                                onChange={(e) =>
+                                                    handlePlans(index, "is_active", e.target.value)
+                                                }
+                                            >
+                                                <option>active</option>
+                                                <option>disabled</option>
+                                            </select>
+                                        </td>
+
+                                    </tr>
+                                ))}
+
+                            </tbody>
+
+                        </table>
                     </div>
 
                 </div>

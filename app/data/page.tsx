@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import api from "../lib/api";
 import { Header } from "@/app/components/data/header";
 import BuyDataComp from "@/app/components/data/buyData";
@@ -8,16 +8,7 @@ import DotLoader from "../components/modal/loader";
 import NetworkSelectionPage from "@/app/components/data/networkpage";
 import { ModalNotification } from "../components/modal/modal";
 import { detectNetwork } from "@/app/components/detectNetwork";
-
-interface UserInfo {
-  username: string;
-  user_balance: string;
-  packages: string;
-  role: string;
-  referree: number;
-  cashback: number;
-  Phone_number: string;
-}
+import { useUserInfo } from "@/app/hooks/useUserInfo";
 
 interface dataType {
   d_id: number;
@@ -54,20 +45,9 @@ const BuyData = () => {
   const PIN_LENGTH = 4;
   const [pin, setPin] = useState(Array(PIN_LENGTH).fill(""));
   const [pageIndex, setPageIndex] = useState(1);
+  const { userInfo } = useUserInfo();
 
   const DataPrice = choosenDataPlan;
-
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    username: "",
-    user_balance: "",
-    role: "",
-    packages: "",
-    cashback: 0,
-    referree: 0,
-    Phone_number: ""
-  });
-
-
 
   useEffect(() => {
     if (phone.length >= 4) {
@@ -77,23 +57,6 @@ const BuyData = () => {
       }
     }
   }, [phone]);
-
-  // Fetch user information
-  useEffect(() => {
-    const handleUserInfo = async () => {
-      try {
-        const response = await api.get<UserInfo>(`/user/info`);
-
-        if (response.status === 200) {
-          setUserInfo(response.data);
-        }
-      } catch (err: any) {
-        console.error(err.response?.data?.message || err.message);
-      }
-    };
-
-    handleUserInfo();
-  }, []);
 
   //Fetch dataType
   useEffect(() => {
@@ -112,8 +75,12 @@ const BuyData = () => {
         if (response.status === 200) {
           setDataType(response.data);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
+        setIsProcessing(false);
+        setNotification(err.response?.data?.message || "Something went wrong");
+        setIsNotification(true);
+        setTitle('Error!')
       }
     }
     fetchDataType();
@@ -130,7 +97,7 @@ const BuyData = () => {
         if (response.status === 200) {
           setDataPlan(response.data);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
       }
     };
@@ -189,6 +156,7 @@ const BuyData = () => {
       {isProcessing && <DotLoader />}
       {isNotification && <ModalNotification notification={notification} title={title} onButtonClick={() => setIsNotification(false)} isNotification={isNotification} />}
       <Header
+      buy="Buy Data"
         pageIndex={pageIndex}
         setPageIndex={setPageIndex}
       />
@@ -236,7 +204,11 @@ const BuyData = () => {
           plan={plan}
           pin={pin}
           setPin={setPin}
-          FetchDataBundle={FetchDataBundle}
+          phoneTitle='Phone Number'
+          ProductTitle="Product"
+          NetworkTitile="Netwok"
+          planTitile="Data Bundle"
+          Fetch={FetchDataBundle}
         />
       )}
     </div>

@@ -18,8 +18,7 @@ export async function GET() {
         is_active: true,
       },
       orderBy: [
-        { name: "asc" },
-        { data_type: "asc" },
+        { network_name: "asc" }, { data_type: "asc" }, { USER: "asc" }, { name: "asc" }
       ],
     });
 
@@ -38,8 +37,7 @@ export async function GET() {
         is_active: true,
       },
       orderBy: [
-        { name: "asc" },
-        { data_type: "asc" },
+        { network_name: "asc" }, { data_type: "asc" }, { USER: "asc" }, { name: "asc" }
       ],
     });
 
@@ -58,8 +56,7 @@ export async function GET() {
         is_active: true,
       },
       orderBy: [
-        { name: "asc" },
-        { data_type: "asc" },
+        { network_name: "asc" }, { data_type: "asc" }, { USER: "asc" }, { name: "asc" }
       ],
     });
 
@@ -78,8 +75,7 @@ export async function GET() {
         is_active: true,
       },
       orderBy: [
-        { name: "asc" },
-        { data_type: "asc" },
+        { network_name: "asc" }, { data_type: "asc" }, { USER: "asc" }, { name: "asc" }
       ],
     });
 

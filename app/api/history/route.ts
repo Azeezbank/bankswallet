@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
     const paymentHistory = paymentTx.map((tx) => ({
       service: "payment",
       type: "Wallet Funding",
-      receiver: "Card Payment",
+      receiver: tx.payment_method,
       amount: tx.amount,
       status: tx.payment_status,
       date: tx.paid_on,
@@ -92,6 +92,7 @@ export async function GET(req: NextRequest) {
     );
 
     const paginated = history.slice(skip, skip + limit);
+    
 
     return NextResponse.json({
       result: paginated,

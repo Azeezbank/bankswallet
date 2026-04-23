@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import api from "@/app/lib/api";
+import { useUsersDetails } from "@/app/hooks/useUserInfo";
 
 interface UserDetails {
   d_id: number;
@@ -18,53 +18,24 @@ interface UserDetails {
 export default function UsersPage() {
 
   const router = useRouter();
-
-  const [users, setUsers] = useState<UserDetails[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<UserDetails[]>([]);
-
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  const [totalPage, setTotalPage] = useState(1);
+  const [filteredUsers, setFilteredUsers] = useState<UserDetails[]>([]);
+
   const [searchTerm, setSearchTerm] = useState("");
 
   /* Fetch users */
+  const { users, totalPage } = useUsersDetails({ page, limit });
 
   useEffect(() => {
-
-    const fetchUsers = async () => {
-
-      try {
-
-        const res = await api.get(
-          `/user/details?page=${page}&limit=${limit}`,
-        );
-
-        if (res.status === 200) {
-
-          setUsers(res.data.data);
-          setFilteredUsers(res.data.data);
-          setTotalPage(res.data.totalPage);
-
-        }
-
-      } catch {
-
-        console.error("Error fetching users");
-
-      }
-
-    };
-
-    fetchUsers();
-
-  }, [page, limit]);
+    setFilteredUsers(users);
+  }, [users]);
 
   /* Search */
-
   const handleSearch = () => {
 
-    if (searchTerm.trim() === "") {
+    if (!searchTerm.trim()) {
       setFilteredUsers(users);
       return;
     }
@@ -250,31 +221,31 @@ export default function UsersPage() {
           </tbody>
 
         </table>
-         </div>
+      </div>
 
-        <div className="flex items-center justify-between mt-4">
+      <div className="flex items-center justify-between mt-4">
 
-          <button
-            disabled={page === 1}
-            onClick={() => setPage((prev) => prev - 1)}
-            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((prev) => prev - 1)}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
 
-          <span className="text-sm">
-            Page {page} of {totalPage}
-          </span>
+        <span className="text-sm">
+          Page {page} of {totalPage}
+        </span>
 
-          <button
-            disabled={page === totalPage}
-            onClick={() => setPage((prev) => prev + 1)}
-            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-          >
-            Next
-          </button>
+        <button
+          disabled={page === totalPage}
+          onClick={() => setPage((prev) => prev + 1)}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
 
-        </div>
+      </div>
 
     </div>
   );

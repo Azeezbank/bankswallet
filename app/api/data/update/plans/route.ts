@@ -3,14 +3,14 @@ import prisma from "@/app/Prisma.client";
 
 export async function PUT(req: Request) {
   try {
-    const mtnSme = await req.json(); // array of plans
+    const dataPlans = await req.json(); // array of plans
 
     await prisma.$transaction(
-      mtnSme.map((item: any) =>
+      dataPlans.map((item: any) =>
         prisma.data_plans.update({
-          where: { d_id: item.d_id },
+          where: { d_id: Number(item.d_id) },
           data: {
-            id: item.id,
+            id: Number(item.id),
             name: item.name,
             network_name: item.network_name,
             data_type: item.data_type,

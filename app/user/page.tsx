@@ -6,7 +6,6 @@ import Header from "@/app/components/dashboard/header";
 import Activity from "@/app/components/dashboard/activities";
 import { Star, Eye, EyeOff, Copy, PackageCheck, History, Wallet2, HistoryIcon } from "lucide-react";
 import QuickAccess from "@/app/components/dashboard/quickaccess";
-import { useBankAccount } from "@/app/hooks/useBankAccount";
 import { useUserInfo } from "@/app/hooks/useUserInfo";
 
 
@@ -77,7 +76,7 @@ const DashboardPage = () => {
     <div>
       <div className="bg-white">
         <Header username={userInfo.username} />
-        <div className="flex flex-col items-center bg-gradient px-4 sm:px-6 py-12 text-white">
+        <div className="flex flex-col items-center bg-gradient px-4 sm:px-6 pt-12 pb-20 h-100 text-white">
 
           {/* Balance label */}
           <h5 className="bg-white/20 rounded-xl px-3 py-1 text-xs sm:text-sm">
