@@ -35,7 +35,7 @@ export default function PlansTable({
       <div className="max-w-6xl mx-auto space-y-10">
 
         {/* HEADER */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-2" id="#pricing">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
             Data Plans & Pricing
           </h2>

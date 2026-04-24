@@ -9,6 +9,9 @@ import NetworkSelectionPage from "@/app/components/data/networkpage";
 import { ModalNotification } from "../components/modal/modal";
 import { detectNetwork } from "@/app/components/detectNetwork";
 import { useUserInfo } from "@/app/hooks/useUserInfo";
+import ReceiptCard from "../components/receipt/ReceiptCard";
+import { Transaction } from "@/app/components/receipt/types";
+import { useAuthGuard } from "@/app/hooks/useAuthGuard";
 
 interface dataType {
   d_id: number;
@@ -46,8 +49,12 @@ const BuyData = () => {
   const [pin, setPin] = useState(Array(PIN_LENGTH).fill(""));
   const [pageIndex, setPageIndex] = useState(1);
   const { userInfo } = useUserInfo();
+  const [txSatatus, setTxStatus] = useState('');
+  const [isReciept, setIsReceipt] = useState(false);
 
   const DataPrice = choosenDataPlan;
+
+  useAuthGuard();
 
   useEffect(() => {
     if (phone.length >= 4) {
@@ -136,17 +143,24 @@ const BuyData = () => {
 
       if (response.status === 200) {
         setIsProcessing(false);
-        setNotification(response.data.message || "Data purchase successful");
-        setIsNotification(true);
-        setTitle('Success!')
+        setTxStatus("success")
+        setIsReceipt(true);
       }
     } catch (err: any) {
       console.error(err);
       setIsProcessing(false);
-      setNotification(err.response?.data?.message || "Something went wrong");
-      setIsNotification(true);
-      setTitle('Error!')
+      setTxStatus("failed")
+      setIsReceipt(true);
     }
+  };
+
+  const transaction: Transaction = {
+    amount: plan,
+    serviceType: "data",
+    network: network,
+    phone: phone,
+    status: txSatatus as "success" | "failed" | "pending",
+    isShare: false,
   };
 
   return (
@@ -156,7 +170,7 @@ const BuyData = () => {
       {isProcessing && <DotLoader />}
       {isNotification && <ModalNotification notification={notification} title={title} onButtonClick={() => setIsNotification(false)} isNotification={isNotification} />}
       <Header
-      buy="Buy Data"
+        buy="Buy Data"
         pageIndex={pageIndex}
         setPageIndex={setPageIndex}
       />
@@ -209,6 +223,13 @@ const BuyData = () => {
           NetworkTitile="Netwok"
           planTitile="Data Bundle"
           Fetch={FetchDataBundle}
+        />
+      )}
+
+      {isReciept && (
+        <ReceiptCard
+          data={transaction}
+          onClose={() => setIsReceipt(false)}
         />
       )}
     </div>

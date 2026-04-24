@@ -7,6 +7,7 @@ import Activity from "@/app/components/dashboard/activities";
 import { Star, Eye, EyeOff, Copy, PackageCheck, History, Wallet2, HistoryIcon } from "lucide-react";
 import QuickAccess from "@/app/components/dashboard/quickaccess";
 import { useUserInfo } from "@/app/hooks/useUserInfo";
+import { useAuthGuard } from "@/app/hooks/useAuthGuard";
 
 
 interface Message {
@@ -27,6 +28,8 @@ const DashboardPage = () => {
   const [link, setLink] = useState("");
 
   const user = userInfo.username ?? "";
+
+  useAuthGuard();
 
   useEffect(() => {
     if (typeof window !== "undefined") {

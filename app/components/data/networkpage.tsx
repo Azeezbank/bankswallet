@@ -2,6 +2,7 @@ import Image from "next/image";
 import { detectNetwork } from "@/app/components/detectNetwork";
 import { Check, ChevronRight } from "lucide-react";
 import React from "react";
+import Link from "next/link";
 
 interface PageInfo {
     page: String;
@@ -53,7 +54,7 @@ const NetworkSelectionPage = ({page, phone, network, plan, beneficiary,
                           : "bg-gray-100"
                         }`}
                     >
-                      Airtime
+                     <Link href="/airtime"> Airtime</Link>
                     </button>
                   </div>
             

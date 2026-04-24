@@ -2,6 +2,7 @@ import Image from "next/image";
 import { detectNetwork } from "@/app/components/detectNetwork";
 import { Check, ChevronRight } from "lucide-react";
 import React from "react";
+import Link from "next/link";
 
 interface PageInfo {
     page: String;
@@ -41,7 +42,7 @@ const NetworkSelectionPage = ({page, phone, network, beneficiary,
                           : "bg-gray-100"
                         }`}
                     >
-                      Data
+                      <Link href={"/data"}>Data</Link>
                     </button>
             
                     <button

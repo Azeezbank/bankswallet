@@ -8,23 +8,14 @@ import TransactionConfirmation from "@/app/components/transactionConfirmation";
 import DotLoader from "../components/modal/loader";
 import NetworkSelectionPage from "@/app/components/airtime/networkpage";
 import { ModalNotification } from "../components/modal/modal";
-import { detectNetwork } from "@/app/components/detectNetwork";
 import { useUserInfo } from "@/app/hooks/useUserInfo";
-
-interface AirtimeN {
-    d_id: number;
-    id: number;
-    name: string;
-}
+import { useAuthGuard } from "@/app/hooks/useAuthGuard";
+import ReceiptCard from "../components/receipt/ReceiptCard";
+import { Transaction } from "@/app/components/receipt/types";
 
 interface AirtimeT {
     d_id: number;
     name: string;
-}
-
-interface walletInfo {
-    username: string;
-    user_balance: string;
 }
 
 const BuyAirtime: React.FC = () => {
@@ -44,6 +35,10 @@ const BuyAirtime: React.FC = () => {
     const [pin, setPin] = useState(Array(PIN_LENGTH).fill(""));
     const [pageIndex, setPageIndex] = useState(1);
     const { userInfo } = useUserInfo();
+    const [txSatatus, setTxStatus] = useState('');
+    const [isReciept, setIsReceipt] = useState(false);
+
+    useAuthGuard();
 
     //Fetch Airtime type
     useEffect(() => {
@@ -87,17 +82,23 @@ const BuyAirtime: React.FC = () => {
             );
             if (response.status === 200) {
                 setIsProcessing(false);
-                setNotification(response.data.message || "Airtime purchase successful");
-                setIsNotification(true);
-                setTitle('Success!')
+                setTxStatus("success")
+                setIsReceipt(true);
             }
         } catch (err: any) {
-            setIsProcessing(true);
             setIsProcessing(false);
-            setNotification(err.response?.data?.message || "Something went wrong");
-            setIsNotification(true);
-            setTitle('Error!')
+            setTxStatus("failed")
+            setIsReceipt(true);
         }
+    };
+
+    const transaction: Transaction = {
+        amount: amountToPay,
+        serviceType: "airtime",
+        network: network,
+        phone: phone,
+        status: txSatatus as "success" | "failed" | "pending",
+        isShare: false,
     };
 
     // update airtime amount to pay
@@ -112,7 +113,8 @@ const BuyAirtime: React.FC = () => {
 
             {/* Header */}
             {isProcessing && <DotLoader />}
-            {isNotification && <ModalNotification notification={notification} title={title} onButtonClick={() => setIsNotification(false)} isNotification={isNotification} />}
+            {isNotification && <ModalNotification notification={notification}
+                title={title} onButtonClick={() => setIsNotification(false)} isNotification={isNotification} />}
             <Header
                 pageIndex={pageIndex}
                 buy="Buy Airtime"
@@ -161,6 +163,13 @@ const BuyAirtime: React.FC = () => {
                     planTitile=""
                     plan=""
                     Fetch={HandleAirtePurchase}
+                />
+            )}
+
+            {isReciept && (
+                <ReceiptCard
+                    data={transaction}
+                    onClose={() => setIsReceipt(false)}
                 />
             )}
         </div>

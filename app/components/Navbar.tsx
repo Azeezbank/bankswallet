@@ -47,14 +47,14 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-3">
 
           <Link
-            href="/login"
+            href="/auth/login"
             className="px-4 py-2 text-sm text-gray-600 hover:text-primary transition"
           >
             Login
           </Link>
 
           <Link
-            href="/register"
+            href="/auth/register"
             className="px-5 py-2 rounded-lg text-sm text-white bg-gradient hover:opacity-90 transition"
           >
             Get Started

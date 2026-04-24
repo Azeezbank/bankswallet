@@ -141,14 +141,6 @@ export async function POST(req: NextRequest) {
             data: { id: userId, plan, phone_number: phone, amount: parseFloat(DataPrice), balance_before: wallet, balance_after: newBalance, status, condition: "Successful" }
         });
 
-        // 10. Reward cashback
-        // try {
-        //     const cashBack = new Decimal(0.2 / 100).times(new Decimal(DataPrice));
-        //     const totalCashBack = (user.cashback).plus(cashBack);
-        //     await prisma.users.update({ where: { d_id: userId }, data: { cashback: totalCashBack } });
-        // } catch (err) {
-        //     console.error("CashBack failed, transaction still successful", err);
-        // }
 
         return NextResponse.json({ message: "Data purchase successful" }, { status: 200 });
     } catch (err) {
