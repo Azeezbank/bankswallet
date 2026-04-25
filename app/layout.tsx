@@ -1,15 +1,23 @@
 
 import './globals.css';
-import { Geist, Geist_Mono } from 'next/font/google';
+// import { Geist, Geist_Mono } from 'next/font/google';
 import { Bricolage_Grotesque } from "next/font/google";
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
+// const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
+// const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 const brico = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-brico",
 });
+
+export const metadata = {
+  title: {
+    default: "BanksWallet",
+    template: "%s | BanksWallet",
+  },
+  description: "Your best VTU platform",
+};
 
 export default function RootLayout({
   children,

@@ -1,7 +1,9 @@
-"use client";
-
 import { Suspense } from "react";
 import RegisterForm from "@/app/components/auth/register";
+
+export const metadata = {
+  title: "Register",
+};
 
 export default function RegisterPage() {
   return (
