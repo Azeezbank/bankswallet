@@ -33,7 +33,7 @@ const DashboardPage = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setLink(`${window.location.origin}/register?ref=${user}`);
+      setLink(`${window.location.origin}/auth/register?ref=${user}`);
     }
   }, [user]);
 

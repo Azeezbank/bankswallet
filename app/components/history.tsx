@@ -5,8 +5,10 @@ import { Smartphone, Wifi, CreditCard } from "lucide-react";
 import api from "@/app/lib/api";
 import DotLoader from "@/app/components/modal/loader";
 import { ModalNotification } from "@/app/components/modal/modal";
+import { useRouter } from "next/navigation";
 
 type HistoryItem = {
+    id: number;
     service: string;
     type: string;
     receiver: string;
@@ -16,6 +18,7 @@ type HistoryItem = {
 };
 
 export default function HistoryPage() {
+    const router = useRouter();
     const [filter, setFilter] = useState("all");
     const [history, setHistory] = useState<HistoryItem[]>([]);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -83,9 +86,9 @@ export default function HistoryPage() {
 
     const getIcon = (service: string) => {
         switch (service) {
-            case "data Transaction":
+            case "data":
                 return <Wifi size={18} />;
-            case "airtime Transaction":
+            case "airtime":
                 return <Smartphone size={18} />;
             case "payment":
                 return <CreditCard size={18} />;
@@ -94,110 +97,123 @@ export default function HistoryPage() {
         }
     };
 
+    const openReceipt = (tx: HistoryItem) => {
+        router.push(`/histories/${tx.id}?service=${tx.service}`);
+    };
+
     return (
         <div className="bg-app-gradient min-h-screen p-4 sm:p-6">
             <div className="max-w-4xl mx-auto space-y-6">
 
-                    {isUpdating && (
-                        <DotLoader />
-                    )}
-                    {isNotification &&
-                        <ModalNotification
-                            notification={notification} title={title}
-                            onButtonClick={() => setIsNotification(false)}
-                            isNotification={isNotification} />}
+                {isUpdating && (
+                    <DotLoader />
+                )}
+                {isNotification &&
+                    <ModalNotification
+                        notification={notification} title={title}
+                        onButtonClick={() => setIsNotification(false)}
+                        isNotification={isNotification} />}
 
-                    {/* Header */}
-                    <div>
-                        <h1 className="text-xl sm:text-2xl font-semibold text-primary">
-                            Transaction History
-                        </h1>
-                    </div>
+                {/* Header */}
+                <div>
+                    <h1 className="text-xl sm:text-2xl font-semibold text-primary">
+                        Transaction History
+                    </h1>
+                </div>
 
-                    {/* Filters */}
-                    <div className="flex gap-2 overflow-x-auto pb-2">
-                        {["all", "payment", "data", "airtime"].map((btn) => (
-                            <button
-                                key={btn}
-                                onClick={() => setFilter(btn)}
-                                className={`px-4 py-2 capitalize rounded-full text-sm font-medium
+                {/* Filters */}
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                    {["all", "payment", "data", "airtime"].map((btn) => (
+                        <button
+                            key={btn}
+                            onClick={() => setFilter(btn)}
+                            className={`px-4 py-2 capitalize rounded-full text-sm font-medium
               ${filter === btn
-                                        ? "bg-primary text-white"
-                                        : "bg-white border"
-                                    }`}
-                            >
-                                {btn}
-                            </button>
-                        ))}
-                    </div>
+                                    ? "bg-primary text-white"
+                                    : "bg-white border"
+                                }`}
+                        >
+                            {btn}
+                        </button>
+                    ))}
+                </div>
 
-                    {/* History */}
-                    <div className="space-y-6">
+                {/* History */}
+                <div className="space-y-6">
 
-                        {Object.entries(grouped).map(([month, items]: any) => (
-                            <div key={month}>
-                                <h2 className="text-sm font-semibold text-gray-500 mb-2 uppercase">
-                                    {month}
-                                </h2>
+                    {Object.entries(grouped).map(([month, items]: any) => (
+                        <div key={month}>
+                            <h2 className="text-sm font-semibold text-gray-500 mb-2 uppercase">
+                                {month}
+                            </h2>
 
-                                <div className="space-y-2">
-                                    {items.map((tx: HistoryItem, index: number) => (
-                                        <div
-                                            key={index}
-                                            className="p-4 bg-white rounded-lg shadow-sm flex justify-between items-center"
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                <div className="p-2 bg-gray-100 rounded-lg text-primary">
-                                                    {getIcon(tx.service)}
-                                                </div>
-
-                                                <div>
-                                                    <p className="font-medium capitalize">
-                                                        {tx.service}
-                                                    </p>
-                                                    <p className="text-xs text-gray-500">
-                                                        {tx.receiver}
-                                                    </p>
-                                                </div>
+                            <div className="space-y-2">
+                                {items.map((tx: HistoryItem, index: number) => (
+                                    <div
+                                        key={index}
+                                        onClick={() => openReceipt(tx)}
+                                        className="p-4 cursor-pointer bg-white rounded-lg shadow-sm flex justify-between items-center"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 bg-gray-100 rounded-lg text-primary">
+                                                {getIcon(tx.service)}
                                             </div>
 
-                                            <div className="text-center">
-                                                <p className="font-semibold">
-                                                    ₦{tx.amount.toLocaleString()}
+                                            <div>
+                                                <p className="font-medium capitalize">
+                                                    {tx.service === 'data' && (
+                                                       <span> Data Transaction</span>
+                                                    )}
+                                                    {tx.service === 'airtime' && (
+                                                       <span> Airtime Transaction</span>
+                                                    )}
+                                                    {tx.service === 'payment' && (
+                                                        <span> Payment</span>
+                                                    )}
                                                 </p>
-
-                                                <span
-                                                    className={`text-xs px-2 py-1 rounded-full
-                        ${tx.status.toLowerCase().charAt(0) === "s" || tx.status.toLowerCase().charAt(0) === "a"
-                                                            ? "bg-green-100 text-green-600"
-                                                            : "bg-red-100 text-red-600"
-                                                        }`}
-                                                >
-                                                    {tx.status}
-                                                </span>
+                                                <p className="text-xs text-gray-500">
+                                                    {tx.receiver}
+                                                </p>
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
+
+                                        <div className="text-center">
+                                            <p className="font-semibold">
+                                                ₦{tx.amount.toLocaleString()}
+                                            </p>
+
+                                            <span
+                                                className={`text-xs px-2 py-1 rounded-full
+                                                       ${tx.status.toLowerCase().charAt(0) === "s" || tx.status.toLowerCase().charAt(0) === "a"
+                                                        ? "bg-green-100 text-green-600"
+                                                        : "bg-red-100 text-red-600"
+                                                    }`}
+                                            >
+                                                {tx.status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-
-                    </div>
-
-                    {/* Load More Button */}
-                    {page < totalPage && (
-                        <div className="flex justify-center pt-4">
-                            <button
-                                onClick={loadMore}
-                                disabled={isUpdating}
-                                className="bg-primary text-white px-6 py-2 rounded-lg"
-                            >
-                                Load More
-                            </button>
                         </div>
-                    )}
+                    ))}
 
                 </div>
+
+                {/* Load More Button */}
+                {page < totalPage && (
+                    <div className="flex justify-center pt-4">
+                        <button
+                            onClick={loadMore}
+                            disabled={isUpdating}
+                            className="bg-primary text-white px-6 py-2 rounded-lg"
+                        >
+                            Load More
+                        </button>
+                    </div>
+                )}
+
             </div>
-            );
+        </div>
+    );
 }

@@ -26,7 +26,7 @@ interface PageInfo {
     setBeneficiary: React.Dispatch<React.SetStateAction<string>>;
     setPageIndex: React.Dispatch<React.SetStateAction<number>>;
 }
-const NetworkSelectionPage = ({page, phone, network, plan, beneficiary, 
+const NetworkSelectionPage = ({page, phone, network, beneficiary, 
     userInfo, setPage, setPhone, setNetwork, setPlan, setBeneficiary, setPageIndex}: PageInfo) => {
 
         const networkType = detectNetwork(userInfo.Phone_number);

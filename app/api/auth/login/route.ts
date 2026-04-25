@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Generate JWT token
-    const token = JWT.sign({ id: user.d_id }, process.env.JWT_SECRET!, { expiresIn: "7d" });
+    const token = JWT.sign({ id: user.d_id }, process.env.JWT_SECRET!, { expiresIn: "10m" });
 
     // Return token in JSON body for frontend to handle
     return NextResponse.json({

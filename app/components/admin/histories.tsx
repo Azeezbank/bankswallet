@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Smartphone, Wifi, CreditCard } from "lucide-react";
-import api from "@/app/lib/api";
 import DotLoader from "@/app/components/modal/loader";
 import { ModalNotification } from "@/app/components/modal/modal";
 import { useAdminHistory } from "@/app/hooks/adminHistories";
+import { useRouter } from "next/navigation";
 
 type HistoryItem = {
+    id: number;
     service: string;
     type: string;
     receiver: string;
@@ -17,8 +18,9 @@ type HistoryItem = {
 };
 
 export default function AdminHistoryPage() {
+    const router = useRouter();
     const [filter, setFilter] = useState("all");
-const [isNotification, setIsNotification] = useState(false);
+    const [isNotification, setIsNotification] = useState(false);
     const { history, isProcessing, notification, title, loadMore, totalPage, page } = useAdminHistory();
 
     const filtered = useMemo(() => {
@@ -56,10 +58,14 @@ const [isNotification, setIsNotification] = useState(false);
     };
 
     useEffect(() => {
-  if (notification) {
-    setIsNotification(true);
-  }
-}, [notification]);
+        if (notification) {
+            setIsNotification(true);
+        }
+    }, [notification]);
+
+    const openReceipt = (tx: HistoryItem) => {
+        router.push(`/histories/${tx.id}?service=${tx.service}`);
+    };
 
     return (
         <div className="bg-app-gradient min-h-screen p-4 sm:p-6">
@@ -111,6 +117,7 @@ const [isNotification, setIsNotification] = useState(false);
                                 {items.map((tx: HistoryItem, index: number) => (
                                     <div
                                         key={index}
+                                        onClick={() => openReceipt(tx)}
                                         className="p-4 bg-white rounded-lg shadow-sm flex justify-between items-center"
                                     >
                                         <div className="flex items-center gap-3">

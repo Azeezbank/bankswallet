@@ -130,7 +130,7 @@ export default function Login() {
           Don't have an account?{" "}
 
           <Link
-            href="/register"
+            href="/auth/register"
             className="text-primary font-medium hover:underline"
           >
             Sign up

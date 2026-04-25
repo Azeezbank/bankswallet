@@ -1,3 +1,5 @@
+"use client";
+
 import HistoryPage from "../components/history";
 import { useAuthGuard } from "@/app/hooks/useAuthGuard";
 

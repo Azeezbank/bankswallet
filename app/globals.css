@@ -32,6 +32,17 @@
 .text-secondary { color: var(--color-secondary); }
 .bg-secondary { background-color: var(--color-secondary); }
 
+.receipt-safe {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.receipt-safe * {
+  color: inherit !important;
+  background-color: transparent !important;
+  border-color: #e5e5e5 !important;
+}
+
 /* Dot Loader */
 .dot-loader {
   display: flex;

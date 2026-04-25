@@ -16,23 +16,16 @@ import {
 } from "lucide-react";
 
 import ReceiptRow from "./ReceiptRow";
-import StatusBadge from "./StatusBadge";
 import { Transaction, getServiceLabel } from "./types";
+import { getStatusIcon, getStatusColor, getStatusMessage, getStatus } from "@/app/utils/receiptStatus";
 
 type Props = {
   data: Transaction;
-  onClose: () => void;
-};
-
-// 🎯 Dynamic status icons
-const StatusIcon = {
-  success: CheckCircle,
-  failed: XCircle,
-  pending: Clock,
+  onClose?: () => void;
 };
 
 export default function ReceiptCard({ data, onClose }: Props) {
-  const Icon = StatusIcon[data.status] || Clock;
+  const Icon = getStatusIcon(data.status);
 
   // 📤 SHARE RECEIPT
   const handleShare = async () => {
@@ -56,7 +49,7 @@ Status: ${data.status}
           title: "Transaction Receipt",
           text,
         });
-      } catch {}
+      } catch { }
     } else {
       navigator.clipboard.writeText(text);
       alert("Receipt copied to clipboard");
@@ -81,12 +74,14 @@ Status: ${data.status}
       >
 
         {/* ❌ CLOSE BUTTON */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 cursor-pointer w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition"
-        >
-          <XCircle size={18} className="text-gray-600" />
-        </button>
+        {!data.close && (
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 cursor-pointer w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition"
+          >
+            <XCircle size={18} className="text-gray-600" />
+          </button>
+        )}
 
         {/* HEADER */}
         <div className="text-center mb-6">
@@ -95,19 +90,12 @@ Status: ${data.status}
           <div className="flex flex-col items-center gap-2 mb-3">
 
             <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
-              <Icon
-                size={28}
-                className={
-                  data.status === "success"
-                    ? "text-green-600"
-                    : data.status === "failed"
-                    ? "text-red-600"
-                    : "text-yellow-600"
-                }
-              />
+            
+              <Icon size={28} className={getStatusColor(data.status)} />
             </div>
 
-            <StatusBadge status={data.status} />
+            {getStatus(data.status)}
+            
 
           </div>
 
@@ -118,9 +106,7 @@ Status: ${data.status}
 
           {/* DESCRIPTION */}
           <p className="text-sm text-gray-500 mt-1">
-            {data.status === "success" && "Your transaction was successful"}
-            {data.status === "failed" && "Your transaction failed"}
-            {data.status === "pending" && "Your transaction is processing"}
+            {getStatusMessage(data.status)}
           </p>
 
         </div>
@@ -128,6 +114,9 @@ Status: ${data.status}
         {/* AMOUNT */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
+            {data.close && (
+            <span>₦</span>
+            )}
             {data.amount}
           </h1>
           <p className="text-sm text-gray-500">
@@ -192,10 +181,26 @@ Status: ${data.status}
             />
           )}
 
+          {data.prevBalance !== undefined && (
+            <ReceiptRow
+              label="Balance Before"
+              value={`₦${data.prevBalance.toLocaleString()}`}
+              icon={<CreditCard size={16} />}
+            />
+          )}
+
+          {data.newBalance !== undefined && (
+            <ReceiptRow
+              label="Balance After"
+              value={`₦${data.newBalance.toLocaleString()}`}
+              icon={<CreditCard size={16} />}
+            />
+          )}
+
           {/* STATUS ROW */}
           <div className="flex justify-between items-center pt-2">
             <span className="text-gray-500 text-sm">Status</span>
-            <StatusBadge status={data.status} />
+            {getStatus(data.status)}
           </div>
 
         </div>

@@ -8,7 +8,10 @@ export type Transaction = {
   reference?: string;
   date?: string;
   status: "success" | "failed" | "pending";
+  prevBalance?: number;
+  newBalance?: number;
   isShare: boolean;
+  close?: boolean;
 };
 
 

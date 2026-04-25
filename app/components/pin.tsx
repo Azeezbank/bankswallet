@@ -45,7 +45,7 @@ export default function PinInput({pin, setPin, FetchDataBundle}: PinInputProps) 
                     <input
                         key={idx}
                         ref={(el) => { inputsRef.current[idx] = el!; }}
-                        type="text"
+                        type="password"
                         maxLength={1}
                         value={digit}
                         onChange={(e) => handleChange(e, idx)}

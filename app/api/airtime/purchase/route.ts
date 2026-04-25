@@ -4,6 +4,7 @@ import axios from "axios";
 import { decrypt } from "@/app/utils/crypto";
 import { transporter } from "@/app/lib/mailler";
 import { Decimal } from "@prisma/client/runtime/library";
+import { generateReference } from "@/app/utils/txRef";
 
 export async function POST(req: Request) {
   try {
@@ -146,12 +147,14 @@ const userId = Number(req.headers.get("x-user-id"));
       status = "api_failed";
     }
 
+    const reference = generateReference();
     // 7. Save history
     await prisma.airtimeHist.create({
       data: {
         id: Number(userId),
+        txRef: reference,
         network: network,
-        amount: parseFloat(amountToPay),
+        amount: new Decimal(amountToPay),
         phone_number: phone,
         previous_balance: wallet,
         new_balance: newBalance,

@@ -4,6 +4,7 @@ import prisma from "@/app/Prisma.client";
 import axios from "axios";
 import { decrypt } from "@/app/utils/crypto";
 import { Decimal } from "@prisma/client/runtime/library";
+import { generateReference } from "@/app/utils/txRef";
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
@@ -126,19 +127,20 @@ export async function POST(req: NextRequest) {
         }
 
         const status = response.data.Status ?? response.data.status;
+        const reference = generateReference();
 
         // 8. Refund if failed
         if (!response.data.Status || ["failed", "Failed", "Fail", "fail"].includes(status) || (typeof status === "number" && status >= 400)) {
             await prisma.users.update({ where: { d_id: userId }, data: { user_balance: wallet } });
             await prisma.dataTransactionHist.create({
-                data: { id: userId, plan, phone_number: phone, amount: parseFloat(DataPrice), balance_before: newBalance, balance_after: wallet, status, condition: "Failed" }
+                data: { id: userId, plan, phone_number: phone, amount: new Decimal(DataPrice), balance_before: newBalance, balance_after: wallet, status, condition: "Failed" }
             });
             return NextResponse.json({ message: "Transaction failed, wallet refunded", status }, { status: 502 });
         }
 
         // 9. Save transaction history
         await prisma.dataTransactionHist.create({
-            data: { id: userId, plan, phone_number: phone, amount: parseFloat(DataPrice), balance_before: wallet, balance_after: newBalance, status, condition: "Successful" }
+            data: { id: userId, txRef: reference, network, plan, phone_number: phone, amount: new Decimal(DataPrice), balance_before: wallet, balance_after: newBalance, status, condition: "Successful" }
         });
 
 

@@ -12,7 +12,7 @@ export const useAuthGuard = () => {
       const ok = await checkAuth();
 
       if (!ok) {
-        router.push(`/login?redirect=${window.location.pathname}`);
+        router.push(`/auth/login?redirect=${window.location.pathname}`);
       }
     };
 

@@ -53,7 +53,8 @@ export async function GET(req: NextRequest) {
 
     // NORMALIZE DATA
     const dataHistory = dataTx.map((tx) => ({
-      service: "data Transaction",
+      id: tx.d_id,
+      service: "data",
       type: tx.plan,
       receiver: tx.phone_number,
       amount: tx.amount,
@@ -62,7 +63,8 @@ export async function GET(req: NextRequest) {
     }));
 
     const airtimeHistory = airtimeTx.map((tx) => ({
-      service: "airtime Transaction",
+      id: tx.d_id,
+      service: "airtime",
       type: tx.airtimeType,
       receiver: tx.phone_number,
       amount: tx.amount,
@@ -71,6 +73,7 @@ export async function GET(req: NextRequest) {
     }));
 
     const paymentHistory = paymentTx.map((tx) => ({
+      id: tx.d_id,
       service: "payment",
       type: "Wallet Funding",
       receiver: tx.payment_method,
