@@ -80,15 +80,14 @@ const BuyAirtime: React.FC = () => {
                 `/airtime/purchase`,
                 { network, airtimeType, phone, amountToPay, amount },
             );
-            if (response.status === 200) {
+        
                 setIsProcessing(false);
                 setTxStatus("success")
                 setIsReceipt(true);
-            }
         } catch (err: any) {
             setIsProcessing(false);
             setTxStatus("failed")
-            setIsReceipt(true);
+            setIsReceipt(true)
         }
     };
 
