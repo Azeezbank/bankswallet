@@ -12,6 +12,7 @@ import { useUserInfo } from "@/app/hooks/useUserInfo";
 import { useAuthGuard } from "@/app/hooks/useAuthGuard";
 import ReceiptCard from "../components/receipt/ReceiptCard";
 import { Transaction } from "@/app/components/receipt/types";
+import { detectNetwork } from "@/app/components/detectNetwork";
 
 interface AirtimeT {
     d_id: number;
@@ -39,6 +40,15 @@ const BuyAirtime: React.FC = () => {
     const [isReciept, setIsReceipt] = useState(false);
 
     useAuthGuard();
+
+useEffect(() => {
+    if (phone.length >= 4) {
+      const detected = detectNetwork(phone);
+      if (detected) {
+        setNetwork(detected);
+      }
+    }
+  }, [phone]);
 
     //Fetch Airtime type
     useEffect(() => {

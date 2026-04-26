@@ -185,7 +185,7 @@ export default function HistoryPage() {
                                             <span
                                                 className={`text-xs px-2 py-1 rounded-full
                                                        ${tx.status.toLowerCase().charAt(0) === "s" || tx.status.toLowerCase().charAt(0) === "a"
-                                                        ? "bg-green-100 text-green-600"
+                                                        ? "bg-green-100 text-green-600" : tx.status.toLowerCase().charAt(0) === "p" ?  "bg-yellow-100 text-red-600"
                                                         : "bg-red-100 text-red-600"
                                                     }`}
                                             >

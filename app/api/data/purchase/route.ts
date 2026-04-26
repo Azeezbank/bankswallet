@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
         const reference = generateReference();
 
         // 8. Refund if failed
-        if (!response.data.Status || ["failed", "Failed", "Fail", "fail"].includes(status) || (typeof status === "number" && status >= 400)) {
+        if (!status || ["failed", "Failed", "Fail", "fail"].includes(status) || (typeof status === "number" && status >= 400)) {
             await prisma.users.update({ where: { d_id: userId }, data: { user_balance: wallet } });
             await prisma.dataTransactionHist.create({
                 data: { id: userId, plan, phone_number: phone, amount: new Decimal(DataPrice), balance_before: newBalance, balance_after: wallet, status, condition: "Failed" }

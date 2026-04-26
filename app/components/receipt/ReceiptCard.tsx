@@ -90,12 +90,12 @@ Status: ${data.status}
           <div className="flex flex-col items-center gap-2 mb-3">
 
             <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
-            
+
               <Icon size={28} className={getStatusColor(data.status)} />
             </div>
 
             {getStatus(data.status)}
-            
+
 
           </div>
 
@@ -114,8 +114,8 @@ Status: ${data.status}
         {/* AMOUNT */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
-            {data.close && (
-            <span>₦</span>
+            {!data.close && (
+              <span>₦</span>
             )}
             {data.amount}
           </h1>
@@ -176,7 +176,13 @@ Status: ${data.status}
           {data.date && (
             <ReceiptRow
               label="Date"
-              value={data.date}
+              value={new Date(data.date).toLocaleString("en-NG", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
               icon={<Calendar size={16} />}
             />
           )}

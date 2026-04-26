@@ -31,7 +31,7 @@ model admin_setting {
 model airtimeHist {
   d_id             Int       @id @default(autoincrement())
   id               Int?
-  txRef            String?
+  txRef            String?      @unique
   network          String?
   amount           Decimal   @default(0.00) @db.Decimal(10, 2)
   phone_number     String?
@@ -54,7 +54,7 @@ model cable {
 model cableHist {
   d_id         Int      @id @default(autoincrement())
   id           Int
-  txRef        String?
+  txRef        String?      @unique
   providername String
   cable_name   String
   amount       Decimal  @default(0.00) @db.Decimal(10, 2)
@@ -84,7 +84,7 @@ model cablenumber {
 model dataTransactionHist {
   d_id           Int                           @id @default(autoincrement())
   id             Int?
-  txRef          String?
+  txRef          String?                      @unique
   network        String?
   plan           String?
   phone_number   String?
