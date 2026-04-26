@@ -41,14 +41,14 @@ const BuyAirtime: React.FC = () => {
 
     useAuthGuard();
 
-useEffect(() => {
-    if (phone.length >= 4) {
-      const detected = detectNetwork(phone);
-      if (detected) {
-        setNetwork(detected);
-      }
-    }
-  }, [phone]);
+    useEffect(() => {
+        if (phone.length >= 4) {
+            const detected = detectNetwork(phone);
+            if (detected) {
+                setNetwork(detected);
+            }
+        }
+    }, [phone]);
 
     //Fetch Airtime type
     useEffect(() => {
@@ -97,8 +97,8 @@ useEffect(() => {
             }
         } catch (err: any) {
             setIsProcessing(false);
-            setTxStatus("failed")
-            setIsReceipt(true);
+            setTxStatus("failed");
+            setIsReceipt(true)
         }
     };
 
