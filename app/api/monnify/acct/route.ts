@@ -28,9 +28,7 @@ const authenticate = async () => {
 
 export async function POST(req: NextRequest) {
   try {
-    // TODO: Replace this with your actual authentication logic
-    // For example, parse JWT from headers
-    const userId = 1; // placeholder for req.user.id
+    const userId = Number(req.headers.get("x-user-id"));
 
     const token = await authenticate();
     const randomRef = Math.floor(1000 + Math.random() * 9000);
