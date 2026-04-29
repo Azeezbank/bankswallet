@@ -16,10 +16,12 @@ interface Message {
 }
 
 const DashboardPage = () => {
+
+  useAuthGuard();
+  
   const { userInfo } = useUserInfo();
 
   const [copysuccess, setCopySuccess] = useState<string>("");
-  const [role, setRole] = useState(true);
   const [dash_message, setDash_message] = useState<Message>({
     whatsapp_link: "",
     dash_message: "",
@@ -28,8 +30,6 @@ const DashboardPage = () => {
   const [link, setLink] = useState("");
 
   const user = userInfo.username ?? "";
-
-  useAuthGuard();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -64,15 +64,6 @@ const DashboardPage = () => {
     };
     handleMessage();
   }, []);
-
-  // Check role
-  useEffect(() => {
-    if (userInfo.role === "admin") {
-      setRole(false);
-    } else {
-      setRole(true);
-    }
-  }, [userInfo]);
 
 
   return (

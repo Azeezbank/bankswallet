@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { Bell, Settings } from "lucide-react";
+import Link from "next/link";
 
 const Header = ({ username }: { username: string }) => {
   return (
     <header className="bg-primary sticky top-0  px-4 sm:px-6 py-3 flex items-center justify-between">
-      
+
       {/* User section */}
       <div className="flex items-center gap-3">
         <Image
@@ -32,7 +33,9 @@ const Header = ({ username }: { username: string }) => {
           </span>
         </div>
 
-        <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
+        <Link href={"/user/setting"}>
+          <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
+        </Link>
       </div>
     </header>
   );
